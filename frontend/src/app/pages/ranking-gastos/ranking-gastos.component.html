@@ -1,0 +1,27 @@
+<h1 class="titulo">Ranking de Gastos Parlamentares</h1>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Posição</th>
+      <th>Deputado</th>
+      <th>Partido</th>
+      <th>UF</th>
+      <th>Total Gasto</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let item of ranking; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ item.txNomeParlamentar }}</td>
+      <td>{{ item.sgPartido }}</td>
+      <td>{{ item.sgUF }}</td>
+      <td>
+        {{
+          item.total_gasto | currency:'BRL':'symbol':'1.2-2'
+        }}
+      </td>
+    </tr>
+  </tbody>
+</table>

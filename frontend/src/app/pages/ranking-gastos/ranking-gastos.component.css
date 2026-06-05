@@ -1,0 +1,41 @@
+.titulo {
+  text-align: center;
+  margin: 30px 0;
+  font-size: 32px;
+  color: #1e293b;
+}
+
+.tabela {
+  width: 90%;
+  margin: auto;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.tabela thead {
+  background-color: #1976d2;
+  color: white;
+}
+
+.tabela th,
+.tabela td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+.tabela tbody tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+.tabela tbody tr:hover {
+  background-color: #e3f2fd;
+  transition: 0.2s;
+}
+
+.tabela td:last-child {
+  font-weight: bold;
+  color: #0f172a;
+}
