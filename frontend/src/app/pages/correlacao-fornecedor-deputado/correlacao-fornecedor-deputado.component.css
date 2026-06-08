@@ -147,36 +147,6 @@ button:hover .icone-lupa {
     color: #7c2d12;
 }
 
-.card-destaque,
-.card-total {
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: space-between;
-
-    min-height: 280px;
-}
-
-.valor-destaque,
-.valor-total {
-
-    font-size: 46px;
-
-    font-weight: bold;
-
-    line-height: 1;
-}
-
-.card-total h3,
-.card-destaque h3 {
-
-    font-size: 24px;
-
-    margin-bottom: 20px;
-}
-
 /* =========================
    Card Total de Gastos
 ========================= */
@@ -223,6 +193,87 @@ button:hover .icone-lupa {
     font-weight: bold;
 
     color: #7f1d1d;
+}
+
+.card-fornecedores {
+
+    flex: 1;
+
+    min-width: 350px;
+
+    background: #eff6ff;
+
+    border-left: 8px solid #2563eb;
+
+    padding: 24px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 6px 16px rgba(37,99,235,.15);
+}
+
+.card-fornecedores h2 {
+
+    color: #1d4ed8;
+
+    margin-bottom: 15px;
+
+    font-size: 20px;
+}
+
+.card-fornecedores h3 {
+
+    color: #1e40af;
+
+    font-size: 24px;
+
+    margin-bottom: 20px;
+}
+
+.valor-fornecedores {
+
+    font-size: 52px;
+
+    font-weight: bold;
+
+    color: #1e3a8a;
+}
+
+.card-destaque,
+.card-total,
+.card-fornecedores {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    min-height: 260px;
+}
+
+.cnpj {
+
+    margin-top: 8px;
+
+    margin-bottom: 15px;
+
+    font-size: 18px;
+
+    color: #444;
+
+    font-weight: 500;
+}
+
+.valor-destaque,
+.valor-total,
+.valor-fornecedores {
+
+    font-size: 46px;
+
+    font-weight: bold;
+
+    line-height: 1;
 }
 
 /* =========================

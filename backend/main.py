@@ -44,6 +44,10 @@ def listar_deputados():
 
     return deputados
 
+
+
+
+
 @app.get("/ranking-gastos")
 def ranking_gastos():
 
@@ -71,6 +75,10 @@ def ranking_gastos():
 
     return dados
 
+
+
+
+
 @app.get("/categorias-gastos")
 def categorias_gastos():
 
@@ -89,6 +97,9 @@ def categorias_gastos():
     conn.close()
 
     return [dict(row) for row in resultado]
+
+
+
 
 
 @app.get("/deputado-gastos/{nome}")
@@ -114,7 +125,6 @@ def gastos_deputado(nome: str):
     conn.close()
 
     return gastos
-    
 
 
 @app.get("/eixos-deputados")
@@ -199,3 +209,48 @@ def nuvem_palavras(eixo: str, top: int = 50):
     counts = Counter(filtered).most_common(top)
 
     return [{"word": w, "count": c} for w, c in counts]
+
+
+@app.get("/teste")
+def teste():
+
+    conn = sqlite3.connect(str(DATABASE))
+    conn.row_factory = sqlite3.Row
+
+    query = """
+    SELECT * FROM Despesas LIMIT 1
+    """
+
+    resultado = conn.execute(query).fetchall()
+
+    dados = [dict(row) for row in resultado]
+
+    conn.close()
+
+    return dados
+
+
+@app.get("/correlacao-fornecedor-deputado/{nome}")
+def deputado_fornecedores(nome: str):
+
+    conn = sqlite3.connect(str(DATABASE))
+    conn.row_factory = sqlite3.Row
+
+    query = """
+    SELECT
+        txtFornecedor,
+        txtCNPJCPF,
+        ROUND(SUM(vlrLiquido), 2) AS total_gasto
+    FROM Despesas
+    WHERE txNomeParlamentar = ?
+      AND txtFornecedor IS NOT NULL
+      AND txtFornecedor <> ''
+    GROUP BY txtFornecedor, txtCNPJCPF
+    ORDER BY total_gasto DESC
+    """
+
+    resultado = conn.execute(query, (nome,)).fetchall()
+
+    conn.close()
+
+    return [dict(row) for row in resultado]
