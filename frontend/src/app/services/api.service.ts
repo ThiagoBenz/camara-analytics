@@ -23,4 +23,18 @@ export class ApiService {
       `http://127.0.0.1:8000/deputado-gastos/${encodeURIComponent(nome)}`
     );
   }
+
+  getEixosDeputados() {
+    return this.http.get(`${this.apiUrl}/eixos-deputados`);
+  }
+
+  getEixosResumo() {
+    return this.http.get(`${this.apiUrl}/eixos-resumo`);
+  }
+
+  getNuvemPalavras(eixo: string) {
+    return this.http.get(
+      `${this.apiUrl}/nuvem-palavras/${encodeURIComponent(eixo)}`
+    );
+  }
 }

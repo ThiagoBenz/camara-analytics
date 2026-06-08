@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { RankingGastosComponent } from './pages/ranking-gastos/ranking-gastos.component';
 import { CategoriasGastosComponent} from'./pages/categorias-gastos/categorias-gastos.component';
+import { EixosDashboardComponent } from './pages/eixos-dashboard/eixos-dashboard.component';
 
 export const routes: Routes = [
 
@@ -19,6 +20,11 @@ export const routes: Routes = [
   {
     path: 'categorias-gastos',
     component: CategoriasGastosComponent
+  },
+
+  {
+    path: 'eixos',
+    component: EixosDashboardComponent
   }
 
 ];

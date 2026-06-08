@@ -168,6 +168,20 @@ python import_csv.py
 
 Esse script importa os arquivos CSV e cria/popula o banco SQLite.
 
+### Rotina de eixos
+
+Para carregar a tabela de deputados e classificar os eixos temáticos a partir das despesas:
+
+```bash
+python backend/rotina_eixos.py
+```
+
+Se quiser recarregar a tabela de deputados do arquivo SQL:
+
+```bash
+python backend/rotina_eixos.py --force
+```
+
 ---
 
 ## 4. Iniciar Backend

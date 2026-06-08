@@ -1,0 +1,40 @@
+<div class="pagina">
+
+  <h1 class="titulo">Câmara Analytics</h1>
+
+  <h2>Classificação por eixos temáticos</h2>
+
+  <label class="filtro">
+    Filtrar por eixo:
+    <select [(ngModel)]="eixoSelecionado" (change)="alterarEixo(eixoSelecionado)">
+      <option *ngFor="let eixo of eixosDisponiveis" [value]="eixo">{{ eixo }}</option>
+    </select>
+  </label>
+
+  <table class="tabela">
+    <thead>
+      <tr>
+        <th>Deputado</th>
+        <th>Partido</th>
+        <th>UF</th>
+        <th>Eixo</th>
+        <th>Score</th>
+        <th>Total Gasto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let deputado of deputadosFiltrados">
+        <td>{{ deputado.nome }}</td>
+        <td>{{ deputado.partido }}</td>
+        <td>{{ deputado.uf }}</td>
+        <td>{{ deputado.eixo }}</td>
+        <td>{{ deputado.score }}</td>
+        <td>{{ deputado.total_gasto | currency:'BRL':'symbol':'1.2-2' }}</td>
+      </tr>
+      <tr *ngIf="deputadosFiltrados.length === 0">
+        <td colspan="6">Nenhum deputado classificado para este eixo.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
