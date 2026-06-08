@@ -3,7 +3,7 @@
     <h1>Câmara Analytics</h1>
 
     <p>
-        Análise dos gastos da atividade parlamentar dos deputados federais por categoria de despesa.
+        Explore quais empresas e prestadores de serviço receberam mais recursos da cota parlamentar de cada deputado federal.
     </p>
 
 </div>
@@ -45,25 +45,28 @@
 
 </div>
 
-<div class="conteudo" *ngIf="gastos.length > 0">
+<div class="conteudo" *ngIf="fornecedores.length > 0">
 
     <div class="cards-container">
 
         <div class="card-destaque">
 
-            <h2>🏆 Maior Categoria de Gasto</h2>
+            <h2>🏆 Fornecedor com Mais Gastos</h2>
 
-            <h3>{{ gastos[0].txtDescricao }}</h3>
+            <h3>{{ fornecedores[0].txtFornecedor }}</h3>
+            <p class="cnpj">
+    			CNPJ: {{ fornecedores[0].txtCNPJCPF }}
+			</p>
 
             <div class="valor-destaque">
-                R$ {{ gastos[0].total_gasto | number:'1.2-2' }}
+                R$ {{ fornecedores[0].total_gasto | number:'1.2-2' }}
             </div>
 
         </div>
 
         <div class="card-total">
 
-            <h2>💰 Total de Gastos</h2>
+            <h2>💰 Total de Gastos com Fornecedores</h2>
 
             <h3>Despesa Acumulada</h3>
 
@@ -72,6 +75,18 @@
             </div>
 
         </div>
+
+        <div class="card-fornecedores">
+
+    		<h2>📋 Fornecedores Utilizados</h2>
+
+    		<h3>Quantidade distinta</h3>
+
+    		<div class="valor-fornecedores">
+        		{{ quantidadeFornecedores }}
+    		</div>
+
+		</div>
 
     </div>
 
@@ -82,7 +97,8 @@
             <thead>
 
                 <tr>
-                    <th>Categoria</th>
+                    <th>Fornecedor</th>
+                    <th>CNPJ/CPF</th>
                     <th>Total Gasto</th>
                 </tr>
 
@@ -90,15 +106,17 @@
 
             <tbody>
 
-                <tr *ngFor="let item of gastos">
+                <tr *ngFor="let item of fornecedores">
 
-                    <td>{{ item.txtDescricao }}</td>
+    				<td>{{ item.txtFornecedor }}</td>
 
-                    <td>
-                        R$ {{ item.total_gasto | number:'1.2-2' }}
-                    </td>
+    				<td>{{ item.txtCNPJCPF }}</td>
 
-                </tr>
+    					<td>
+        				R$ {{ item.total_gasto | number:'1.2-2' }}
+    					</td>
+
+				</tr>
 
             </tbody>
 

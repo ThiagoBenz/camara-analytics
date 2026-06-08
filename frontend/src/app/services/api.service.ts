@@ -21,6 +21,13 @@ export class ApiService {
   getGastosDeputado(nome: string) {
     return this.http.get(
       `http://127.0.0.1:8000/deputado-gastos/${encodeURIComponent(nome)}`
-    );
+    )
   }
+
+  getFornecedoresDeputado(nome: string) {
+  return this.http.get(
+    `${this.apiUrl}/correlacao-fornecedor-deputado/${encodeURIComponent(nome)}`
+  );
+}
+
 }
