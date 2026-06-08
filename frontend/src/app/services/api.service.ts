@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+  import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -12,5 +12,15 @@ export class ApiService {
 
   getRankingGastos() {
     return this.http.get(`${this.apiUrl}/ranking-gastos`);
+  }
+  
+  getDeputados() {
+  return this.http.get('http://127.0.0.1:8000/deputados');
+  }
+
+  getGastosDeputado(nome: string) {
+    return this.http.get(
+      `http://127.0.0.1:8000/deputado-gastos/${encodeURIComponent(nome)}`
+    );
   }
 }

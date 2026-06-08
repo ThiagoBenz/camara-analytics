@@ -1,0 +1,109 @@
+<div class="cabecalho">
+
+    <h1>Câmara Analytics</h1>
+
+    <p>
+        Análise dos gastos da atividade parlamentar dos deputados federais.
+    </p>
+
+</div>
+
+<div class="filtro-container">
+
+    <mat-form-field
+    appearance="outline"
+    class="campo-deputado">
+
+    <mat-label>Pesquise um deputado</mat-label>
+
+    <input
+        matInput
+        type="text"
+        [(ngModel)]="deputadoSelecionado"
+        [matAutocomplete]="auto"
+        (input)="filtrarDeputados()">
+
+    <mat-icon matSuffix class="icone-pesquisa">
+    search
+    </mat-icon>
+
+    <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="selecionarDeputado($event.option.value)">
+
+        <mat-option
+            *ngFor="let deputado of deputadosFiltrados"
+            [value]="deputado.txNomeParlamentar">
+
+            {{ deputado.txNomeParlamentar }}
+
+        </mat-option>
+
+    </mat-autocomplete>
+
+</mat-form-field>
+
+</div>
+
+<div class="conteudo" *ngIf="gastos.length > 0">
+
+    <div class="cards-container">
+
+        <div class="card-destaque">
+
+            <h2>🏆 Maior Categoria de Gasto</h2>
+
+            <h3>{{ gastos[0].txtDescricao }}</h3>
+
+            <div class="valor-destaque">
+                R$ {{ gastos[0].total_gasto | number:'1.2-2' }}
+            </div>
+
+        </div>
+
+        <div class="card-total">
+
+            <h2>💰 Total de Gastos</h2>
+
+            <h3>Despesa Acumulada</h3>
+
+            <div class="valor-total">
+                R$ {{ totalGastos | number:'1.2-2' }}
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="table-container">
+
+        <table class="tabela">
+
+            <thead>
+
+                <tr>
+                    <th>Categoria</th>
+                    <th>Total Gasto</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr *ngFor="let item of gastos">
+
+                    <td>{{ item.txtDescricao }}</td>
+
+                    <td>
+                        R$ {{ item.total_gasto | number:'1.2-2' }}
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

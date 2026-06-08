@@ -20,15 +20,18 @@ def home():
 
 @app.get("/deputados")
 def listar_deputados():
-    conn = sqlite3.connect(DATABASE)
 
+    conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
 
-    cursor = conn.cursor()
+    query = """
+    SELECT DISTINCT txNomeParlamentar
+    FROM Despesas
+    WHERE txNomeParlamentar IS NOT NULL
+    ORDER BY txNomeParlamentar
+    """
 
-    cursor.execute("SELECT * FROM Deputados LIMIT 20")
-
-    deputados = [dict(row) for row in cursor.fetchall()]
+    deputados = [dict(row) for row in conn.execute(query).fetchall()]
 
     conn.close()
 
@@ -62,3 +65,49 @@ def ranking_gastos():
 
     return dados
 
+@app.get("/categorias-gastos")
+def categorias_gastos():
+
+    conn = sqlite3.connect("database/camara.db")
+    conn.row_factory = sqlite3.Row
+
+    query = """
+    SELECT
+        txtDescricao,
+        ROUND(SUM(vlrLiquido), 2) AS total_gasto
+    FROM Despesas
+    GROUP BY txtDescricao
+    ORDER BY total_gasto DESC
+    """
+
+    resultado = conn.execute(query).fetchall()
+    conn.close()
+
+    return [dict(row) for row in resultado]
+
+
+@app.get("/deputado-gastos/{nome}")
+def gastos_deputado(nome: str):
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+
+    query = """
+    SELECT
+        txtDescricao,
+        ROUND(SUM(vlrLiquido), 2) AS total_gasto
+    FROM Despesas
+    WHERE txNomeParlamentar = ?
+    GROUP BY txtDescricao
+    ORDER BY total_gasto DESC
+    """
+
+    gastos = [
+        dict(row)
+        for row in conn.execute(query, (nome,)).fetchall()
+    ]
+
+    conn.close()
+
+    return gastos
+    

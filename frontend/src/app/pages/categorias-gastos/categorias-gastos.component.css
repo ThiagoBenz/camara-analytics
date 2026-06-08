@@ -1,0 +1,291 @@
+/* =========================
+   Cabeçalho
+========================= */
+
+.cabecalho {
+    text-align: center;
+    margin: 0 0 20px 0;
+}
+
+.cabecalho h1 {
+    font-size: 32px;
+    color: #1e293b;
+    margin: 0;
+}
+
+.cabecalho p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* =========================
+   Campo de Pesquisa
+========================= */
+
+.filtro-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.campo-deputado {
+    width: 620px;
+}
+
+/* sombra parecida com Mercado Livre */
+::ng-deep .campo-deputado .mat-mdc-text-field-wrapper {
+
+    background: white;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 1px 2px rgba(0,0,0,.08),
+        0 3px 8px rgba(0,0,0,.12);
+
+}
+
+/* remove fundo cinza do material */
+::ng-deep .campo-deputado .mdc-text-field {
+    background: white !important;
+}
+
+.icone-lupa {
+
+    font-size: 24px;
+
+    opacity: .65;
+
+    transition: .2s;
+}
+
+button:hover .icone-lupa {
+    opacity: 1;
+}
+.icone-pesquisa {
+
+    color: #666;
+
+    font-size: 30px;
+
+    width: 30px;
+
+    height: 30px;
+
+    margin-right: 15px;
+
+    padding-left: 15px;
+
+    border-left: 1px solid #d1d5db;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.icone-pesquisa:hover {
+
+    color: #1976d2;
+}
+
+/* =========================
+   Área dos Cards
+========================= */
+
+.cards-container {
+    width: 90%;
+    margin: 20px auto 30px auto;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* =========================
+   Card Maior Categoria
+========================= */
+
+.card-destaque {
+
+    flex: 1;
+    min-width: 350px;
+
+    background: #fff7ed;
+
+    border-left: 6px solid #ea580c;
+
+    padding: 24px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card-destaque h2 {
+
+    color: #c2410c;
+
+    margin-bottom: 15px;
+
+    font-size: 20px;
+}
+
+.card-destaque h3 {
+
+    color: #7c2d12;
+
+    font-size: 24px;
+
+    margin-bottom: 20px;
+}
+
+.valor-destaque {
+
+    font-size: 36px;
+
+    font-weight: bold;
+
+    color: #7c2d12;
+}
+
+/* =========================
+   Card Total de Gastos
+========================= */
+
+.card-total {
+
+    flex: 1;
+
+    min-width: 350px;
+
+    background: #fee2e2;
+
+    border-left: 8px solid #b91c1c;
+
+    padding: 24px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 6px 16px rgba(185,28,28,0.25);
+}
+
+.card-total h2 {
+
+    color: #991b1b;
+
+    margin-bottom: 15px;
+
+    font-size: 20px;
+}
+
+.card-total h3 {
+
+    color: #7f1d1d;
+
+    font-size: 24px;
+
+    margin-bottom: 20px;
+}
+
+.valor-total {
+
+    font-size: 52px;
+
+    font-weight: bold;
+
+    color: #7f1d1d;
+}
+
+/* =========================
+   Tabela
+========================= */
+
+.table-container {
+    width: 90%;
+    margin: 0 auto 40px auto;
+}
+
+.tabela {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background: white;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.tabela thead {
+
+    background-color: #1976d2;
+
+    color: white;
+}
+
+.tabela th,
+.tabela td {
+
+    padding: 14px 18px;
+
+    text-align: left;
+}
+
+.tabela tbody tr:nth-child(even) {
+
+    background-color: #f5f5f5;
+}
+
+.tabela tbody tr:hover {
+
+    background-color: #e3f2fd;
+
+    transition: 0.2s;
+}
+
+.tabela td:last-child {
+
+    font-weight: bold;
+
+    color: #0f172a;
+}
+
+/* =========================
+   Espaço inferior da página
+========================= */
+
+.conteudo {
+    padding-bottom: 60px;
+}
+
+/* =========================
+   Responsividade
+========================= */
+
+@media (max-width: 768px) {
+
+    .campo-deputado {
+        width: 90%;
+    }
+
+    .cards-container {
+        width: 90%;
+    }
+
+    .card-destaque,
+    .card-total {
+        min-width: 100%;
+    }
+
+    .valor-destaque {
+        font-size: 28px;
+    }
+
+    .valor-total {
+        font-size: 36px;
+    }
+
+}
