@@ -1,15 +1,20 @@
 import { Routes } from '@angular/router';
 
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { RankingGastosComponent } from './pages/ranking-gastos/ranking-gastos.component';
-import { CategoriasGastosComponent} from'./pages/categorias-gastos/categorias-gastos.component';
-import {CorrelacaoFornecedorDeputadoComponent} from './pages/correlacao-fornecedor-deputado/correlacao-fornecedor-deputado.component';
+import { CategoriasGastosComponent } from './pages/categorias-gastos/categorias-gastos.component';
+import { CorrelacaoFornecedorDeputadoComponent } from './pages/correlacao-fornecedor-deputado/correlacao-fornecedor-deputado.component';
 
 export const routes: Routes = [
 
   {
     path: '',
-    redirectTo: 'ranking-gastos',
-    pathMatch: 'full'
+    component: DashboardComponent
+  },
+
+  {
+    path: 'home',
+    component: DashboardComponent
   },
 
   {
@@ -23,8 +28,8 @@ export const routes: Routes = [
   },
 
   {
-  path: 'correlacao-fornecedor-deputado',
-  component: CorrelacaoFornecedorDeputadoComponent
-}
+    path: 'correlacao-fornecedor-deputado',
+    component: CorrelacaoFornecedorDeputadoComponent
+  }
 
 ];

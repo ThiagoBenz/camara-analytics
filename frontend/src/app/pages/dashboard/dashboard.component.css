@@ -1,0 +1,604 @@
+/* =========================
+   Cabeçalho
+========================= */
+
+.cabecalho {
+
+    text-align: center;
+
+    margin: 20px 0 40px 0;
+}
+
+.cabecalho h1 {
+
+    font-size: 36px;
+
+    color: #1e293b;
+
+    margin-bottom: 15px;
+}
+
+.cabecalho p {
+
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    color: #64748b;
+
+    font-size: 1.1rem;
+
+    line-height: 1.7;
+}
+
+/* =========================
+   Cards Indicadores
+========================= */
+
+.cards-indicadores {
+
+    width: 90%;
+
+    margin: 0 auto 50px auto;
+
+    display: flex;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+
+.card-indicador {
+
+    flex: 1;
+
+    min-width: 240px;
+
+    background: white;
+
+    border-top: 5px solid #1976d2;
+
+    border-radius: 12px;
+
+    padding: 25px;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+
+    transition: .2s;
+}
+
+.card-indicador:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+.card-indicador h2 {
+
+    font-size: 18px;
+
+    color: #475569;
+
+    margin-bottom: 15px;
+}
+
+.card-indicador .valor {
+
+    font-size: 42px;
+
+    font-weight: bold;
+
+    color: #0f172a;
+}
+
+/* =========================
+   Seções
+========================= */
+
+.secao {
+
+    width: 90%;
+
+    margin: 0 auto 50px auto;
+}
+
+.titulo-secao {
+
+    color: #1e293b;
+
+    margin-bottom: 25px;
+
+    font-size: 28px;
+}
+
+/* =========================
+   Cards de Navegação
+========================= */
+
+.cards-acesso {
+
+    display: flex;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+
+.card-acesso {
+
+    flex: 1;
+
+    min-width: 280px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 25px;
+
+    text-decoration: none;
+
+    color: inherit;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+
+    transition: .2s;
+}
+
+.card-acesso:hover {
+
+    transform: translateY(-3px);
+
+    background: #f8fafc;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+.card-acesso h3 {
+
+    color: #1976d2;
+
+    margin-bottom: 12px;
+
+    font-size: 22px;
+}
+
+.card-acesso p {
+
+    color: #64748b;
+
+    line-height: 1.6;
+}
+
+.subtitulo-secao {
+
+    font-size: 24px;
+
+    color: #334155;
+
+    margin: 20px 0 25px 10px;
+
+    font-weight: 600;
+
+    border-left: 4px solid #2563eb;
+
+    padding-left: 12px;
+}
+
+/* =========================
+   Cards Futuros
+========================= */
+
+.card-futuro {
+
+    border: 2px dashed #cbd5e1;
+
+    background: #f8fafc;
+}
+
+.card-futuro h3 {
+
+    color: #475569;
+}
+
+/* =========================
+   Responsividade
+========================= */
+
+@media (max-width: 768px) {
+
+    .cards-indicadores,
+    .cards-acesso {
+
+        flex-direction: column;
+    }
+
+    .card-indicador,
+    .card-acesso {
+
+        min-width: 100%;
+    }
+
+    .card-indicador .valor {
+
+        font-size: 32px;
+    }
+
+}
+
+/* =========================
+   Destaques
+========================= */
+
+.cards-destaques {
+
+    width: 100%;
+
+    display: flex;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+
+.card-maior-gastador {
+
+    flex: 1;
+
+    min-width: 350px;
+
+    background: #fff7ed;
+
+    border-left: 8px solid #ea580c;
+
+    border-radius: 12px;
+
+    padding: 24px;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+
+    transition: .2s;
+}
+
+.card-partido {
+
+    flex: 1;
+
+    min-width: 350px;
+
+    background: #eff6ff;
+
+    border-left: 8px solid #2563eb;
+
+    border-radius: 12px;
+
+    padding: 24px;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+
+    transition: .2s;
+}
+
+.card-maior-gastador:hover,
+.card-partido:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+.card-maior-gastador h3 {
+
+    color: #c2410c;
+
+    margin-bottom: 20px;
+
+    font-size: 20px;
+}
+
+.card-partido h3 {
+
+    color: #1d4ed8;
+
+    margin-bottom: 20px;
+
+    font-size: 20px;
+}
+
+.nome-destaque {
+
+    font-size: 24px;
+
+    font-weight: 600;
+
+    color: #1e293b;
+
+    margin-bottom: 20px;
+}
+
+.valor-destaque {
+
+    font-size: 42px;
+
+    font-weight: bold;
+
+    color: #0f172a;
+}
+
+/* Responsividade */
+
+@media (max-width: 768px) {
+
+    .cards-destaques {
+
+        flex-direction: column;
+    }
+
+    .card-maior-gastador,
+    .card-partido {
+
+        min-width: 100%;
+    }
+
+    .valor-destaque {
+
+        font-size: 32px;
+    }
+
+}
+
+.descricao-indicador {
+
+    margin-top: 10px;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    color: #64748b;
+
+    line-height: 1.4;
+}
+
+/* =========================
+   Pódio de Fornecedores
+========================= */
+
+.podio {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: flex-end;
+
+    gap: 25px;
+
+    margin: 30px 0 40px 0;
+
+    flex-wrap: wrap;
+}
+
+.primeiro,
+.segundo,
+.terceiro {
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    text-align: center;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+
+    transition: .2s;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+.primeiro:hover,
+.segundo:hover,
+.terceiro:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+/* 1º Lugar */
+
+.primeiro {
+
+    min-height: 240px;
+
+    width: 280px;
+
+    border-top: 8px solid #f59e0b;
+}
+
+/* 2º Lugar */
+
+.segundo {
+
+    min-height: 200px;
+
+    width: 250px;
+
+    border-top: 8px solid #94a3b8;
+}
+
+/* 3º Lugar */
+
+.terceiro {
+
+    min-height: 180px;
+
+    width: 250px;
+
+    border-top: 8px solid #b45309;
+}
+
+.medalha {
+
+    font-size: 42px;
+
+    margin-bottom: 15px;
+}
+
+.nome {
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    color: #1e293b;
+
+    margin-bottom: 15px;
+
+    line-height: 1.4;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 3;
+
+    -webkit-box-orient: vertical;
+}
+
+.valor {
+
+    font-size: 26px;
+
+    font-weight: bold;
+
+    color: #0f172a;
+}
+
+/* =========================
+   4º e 5º colocados
+========================= */
+
+.ranking-restante {
+
+    width: 80%;
+
+    margin: 0 auto;
+
+    border-top: 1px solid #e2e8f0;
+
+    padding-top: 20px;
+}
+
+.linha-ranking {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #f1f5f9;
+
+    color: #334155;
+
+    font-size: 16px;
+}
+
+.linha-ranking:last-child {
+
+    border-bottom: none;
+}
+
+.linha-ranking span:last-child {
+
+    font-weight: bold;
+
+    color: #0f172a;
+}
+
+/* =========================
+   Responsividade
+========================= */
+
+@media (max-width: 768px) {
+
+    .podio {
+
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+    .primeiro,
+    .segundo,
+    .terceiro {
+
+        width: 100%;
+
+        max-width: 400px;
+
+        min-height: auto;
+    }
+
+    .ranking-restante {
+
+        width: 100%;
+    }
+
+}
+
+.card-fornecedor {
+
+    flex: 1;
+
+    min-width: 350px;
+
+    background: #ecfdf5;
+
+    border-left: 8px solid #10b981;
+
+    border-radius: 12px;
+
+    padding: 24px;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+
+    transition: .2s;
+}
+
+.card-fornecedor:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+.card-fornecedor h3 {
+
+    color: #047857;
+
+    margin-bottom: 20px;
+
+    font-size: 20px;
+}
+
+/* =========================
+   Espaço inferior da página
+========================= */
+
+.conteudo {
+
+    padding-bottom: 60px;
+}
