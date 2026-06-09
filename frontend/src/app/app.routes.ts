@@ -4,6 +4,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { RankingGastosComponent } from './pages/ranking-gastos/ranking-gastos.component';
 import { CategoriasGastosComponent } from './pages/categorias-gastos/categorias-gastos.component';
 import { CorrelacaoFornecedorDeputadoComponent } from './pages/correlacao-fornecedor-deputado/correlacao-fornecedor-deputado.component';
+import { PanoramaPartidosComponent } from './pages/panorama-partidos/panorama-partidos.component';
 
 export const routes: Routes = [
 
@@ -30,6 +31,11 @@ export const routes: Routes = [
   {
     path: 'correlacao-fornecedor-deputado',
     component: CorrelacaoFornecedorDeputadoComponent
+  },
+
+  {
+    path: 'panorama-partidos',
+    component: PanoramaPartidosComponent
   }
 
 ];
