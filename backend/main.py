@@ -177,4 +177,141 @@ def deputado_fornecedores(nome: str):
 
 
 
+@app.get("/dashboard")
+def dashboard():
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+
+    query = """
+    SELECT
+        (SELECT COUNT(DISTINCT txNomeParlamentar)
+         FROM Despesas) AS total_deputados,
+
+        (SELECT COUNT(DISTINCT sgPartido)
+         FROM Despesas
+         WHERE sgPartido IS NOT NULL) AS total_partidos,
+
+        (SELECT COUNT(DISTINCT txtFornecedor)
+         FROM Despesas
+         WHERE txtFornecedor IS NOT NULL
+           AND txtFornecedor <> '') AS total_fornecedores,
+
+        (SELECT ROUND(SUM(vlrLiquido), 2)
+         FROM Despesas) AS total_despesas
+    """
+
+    resultado = conn.execute(query).fetchone()
+
+    conn.close()
+
+    return dict(resultado)
+
+
+
+
+# RETORNA O DEPUTADO COM MAIS GASTOS E O PARTIDO COM MAIS GASTOS
+@app.get("/dashboard-destaques")
+def dashboard_destaques():
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+
+    deputado_query = """
+    SELECT
+        txNomeParlamentar,
+        sgPartido,
+        ROUND(SUM(vlrLiquido), 2) AS total_gasto
+    FROM Despesas
+    WHERE txNomeParlamentar IS NOT NULL
+    GROUP BY txNomeParlamentar, sgPartido
+    ORDER BY total_gasto DESC
+    LIMIT 1
+    """
+
+    partido_query = """
+    SELECT
+        sgPartido,
+        ROUND(SUM(vlrLiquido), 2) AS total_gasto
+    FROM Despesas
+    WHERE sgPartido IS NOT NULL
+    GROUP BY sgPartido
+    ORDER BY total_gasto DESC
+    LIMIT 1
+    """
+
+    deputado = conn.execute(deputado_query).fetchone()
+    partido = conn.execute(partido_query).fetchone()
+
+    conn.close()
+
+    return {
+        "deputado": dict(deputado),
+        "partido": dict(partido)
+    }
+
+
+
+
+
+# RETORNA DADOS DOS FORNECEDORES MAIS USADOS POR DEPUTADOS FEDERAIS
+@app.get("/dashboard-fornecedores")
+def dashboard_fornecedores():
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+
+    maior_recebedor_query = """
+    SELECT
+        txtFornecedor,
+        txtCNPJCPF,
+        ROUND(SUM(vlrLiquido), 2) AS total_recebido
+    FROM Despesas
+    WHERE txtFornecedor IS NOT NULL
+      AND txtFornecedor <> ''
+    GROUP BY txtFornecedor, txtCNPJCPF
+    ORDER BY total_recebido DESC
+    LIMIT 1
+    """
+
+    mais_utilizado_query = """
+    SELECT
+        txtFornecedor,
+        txtCNPJCPF,
+        COUNT(DISTINCT txNomeParlamentar) AS deputados
+    FROM Despesas
+    WHERE txtFornecedor IS NOT NULL
+      AND txtFornecedor <> ''
+    GROUP BY txtFornecedor, txtCNPJCPF
+    ORDER BY deputados DESC
+    LIMIT 1
+    """
+
+    top5_query = """
+    SELECT
+        txtFornecedor,
+        ROUND(SUM(vlrLiquido), 2) AS total_recebido
+    FROM Despesas
+    WHERE txtFornecedor IS NOT NULL
+      AND txtFornecedor <> ''
+    GROUP BY txtFornecedor
+    ORDER BY total_recebido DESC
+    LIMIT 5
+    """
+
+    maior_recebedor = conn.execute(maior_recebedor_query).fetchone()
+    mais_utilizado = conn.execute(mais_utilizado_query).fetchone()
+    top5 = conn.execute(top5_query).fetchall()
+
+    conn.close()
+
+    return {
+        "maior_recebedor": dict(maior_recebedor),
+        "mais_utilizado": dict(mais_utilizado),
+        "top5": [dict(row) for row in top5]
+    }
+
+
+
+
     

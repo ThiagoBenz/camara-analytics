@@ -25,9 +25,31 @@ export class ApiService {
   }
 
   getFornecedoresDeputado(nome: string) {
+    return this.http.get(
+      `${this.apiUrl}/correlacao-fornecedor-deputado/${encodeURIComponent(nome)}`
+    )
+  }
+
+  getDashboard() {
+    return this.http.get(
+      `${this.apiUrl}/dashboard`
+    )
+  }
+
+  getDashboardDestaques() {
+
+    return this.http.get(
+      `${this.apiUrl}/dashboard-destaques`
+  )
+
+  }
+
+  getDashboardFornecedores() {
+
   return this.http.get(
-    `${this.apiUrl}/correlacao-fornecedor-deputado/${encodeURIComponent(nome)}`
+    `${this.apiUrl}/dashboard-fornecedores`
   );
+
 }
 
 }
