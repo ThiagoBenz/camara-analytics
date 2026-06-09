@@ -4,6 +4,7 @@ import { RankingGastosComponent } from './pages/ranking-gastos/ranking-gastos.co
 import { CategoriasGastosComponent} from'./pages/categorias-gastos/categorias-gastos.component';
 import { EixosDashboardComponent } from './pages/eixos-dashboard/eixos-dashboard.component';
 import {CorrelacaoFornecedorDeputadoComponent} from './pages/correlacao-fornecedor-deputado/correlacao-fornecedor-deputado.component';
+import { EscolaridadeDashboardComponent } from './pages/escolaridade-dashboard/escolaridade-dashboard.component';
 
 export const routes: Routes = [
 
@@ -31,6 +32,10 @@ export const routes: Routes = [
   {
     path: 'correlacao-fornecedor-deputado',
     component: CorrelacaoFornecedorDeputadoComponent
+  },
+  {
+    path: 'escolaridade',
+    component: EscolaridadeDashboardComponent
   }
 
 ];

@@ -171,6 +171,59 @@ def eixos_resumo():
         conn.close()
 
 
+@app.get("/escolaridade-resumo")
+def escolaridade_resumo():
+    """Retorna contagem, gastos totais e médios por grupo de escolaridade."""
+    conn = get_connection()
+    query = """
+    SELECT 
+        grupo_escolaridade, 
+        COUNT(*) AS total_deputados, 
+        SUM(total_gasto) AS gasto_total, 
+        AVG(total_gasto) AS gasto_medio
+    FROM DeputyEscolaridade
+    GROUP BY grupo_escolaridade
+    ORDER BY total_deputados DESC
+    """
+    try:
+        resultado = conn.execute(query).fetchall()
+        return [dict(row) for row in resultado]
+    except sqlite3.OperationalError:
+        return []
+    finally:
+        conn.close()
+
+
+@app.get("/escolaridade-deputados")
+def escolaridade_deputados(grupo: str = None):
+    """Retorna lista de deputados pertencentes a um grupo específico ou todos."""
+    conn = get_connection()
+    query = """
+    SELECT 
+        id_deputado, 
+        nome, 
+        partido, 
+        uf, 
+        escolaridade_original, 
+        escolaridade_limpa, 
+        grupo_escolaridade, 
+        total_gasto
+    FROM DeputyEscolaridade
+    """
+    params = []
+    if grupo:
+        query += " WHERE grupo_escolaridade = ?"
+        params.append(grupo)
+    query += " ORDER BY total_gasto DESC"
+    try:
+        resultado = conn.execute(query, params).fetchall()
+        return [dict(row) for row in resultado]
+    except sqlite3.OperationalError:
+        return []
+    finally:
+        conn.close()
+
+
 @app.get("/nuvem-palavras/{eixo}")
 def nuvem_palavras(eixo: str, top: int = 50):
     """Gera nuvem simples (top palavras) para o eixo informado com base nas despesas dos deputados classificados.

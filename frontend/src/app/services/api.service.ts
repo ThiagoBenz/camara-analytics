@@ -32,6 +32,17 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/eixos-resumo`);
   }
 
+  getEscolaridadeResumo() {
+    return this.http.get(`${this.apiUrl}/escolaridade-resumo`);
+  }
+
+  getEscolaridadeDeputados(grupo?: string) {
+    const url = grupo 
+      ? `${this.apiUrl}/escolaridade-deputados?grupo=${encodeURIComponent(grupo)}`
+      : `${this.apiUrl}/escolaridade-deputados`;
+    return this.http.get(url);
+  }
+
   getNuvemPalavras(eixo: string) {
     return this.http.get(
       `${this.apiUrl}/nuvem-palavras/${encodeURIComponent(eixo)}`

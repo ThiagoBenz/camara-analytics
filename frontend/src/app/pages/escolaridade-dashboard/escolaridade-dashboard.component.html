@@ -1,0 +1,156 @@
+<div class="pagina">
+  <div class="header-container">
+    <div class="brand-badge">ANÁLISE DE PERFIL</div>
+    <h1 class="titulo-principal">Escolaridade dos Deputados</h1>
+    <p class="descricao">
+      Investigação e agrupamento estatístico sobre os níveis de instrução acadêmica dos parlamentares e a relação com seus gastos de cota parlamentar.
+    </p>
+
+    <!-- Top Global KPIs -->
+    <div class="kpi-row">
+      <div class="kpi-card glass">
+        <div class="kpi-icon">🎓</div>
+        <div class="kpi-info">
+          <span class="kpi-value">{{ totalDeputados }}</span>
+          <span class="kpi-label">Deputados Analisados</span>
+        </div>
+      </div>
+      <div class="kpi-card glass">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-info">
+          <span class="kpi-value">{{ totalGastosGeral | currency:'BRL':'symbol':'1.0-0' }}</span>
+          <span class="kpi-label">Cota Total Acumulada</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Distribution bar -->
+  <div class="secao-distribuicao glass">
+    <h3>Distribuição Geral Acadêmica</h3>
+    <div class="distribuicao-bar-container">
+      <div *ngFor="let item of resumo; let i = index" 
+           class="distribuicao-segment"
+           [style.width.%]="getPorcentagemDeputados(item.total_deputados)"
+           [attr.title]="item.grupo_escolaridade + ': ' + item.total_deputados + ' deputados'"
+           [ngClass]="'segment-' + i">
+      </div>
+    </div>
+    <div class="distribuicao-legenda">
+      <div *ngFor="let item of resumo; let i = index" class="legenda-item">
+        <span class="legenda-cor" [ngClass]="'segment-' + i"></span>
+        <span class="legenda-texto">
+          <strong>{{ item.grupo_escolaridade }}</strong>: 
+          {{ getPorcentagemDeputados(item.total_deputados) | number:'1.1-1' }}%
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="subtitulo-secao">Selecione um Agrupamento</h2>
+
+  <!-- Interactive Grid Cards -->
+  <div class="grid-resumo">
+    <div *ngFor="let item of resumo; let i = index" 
+         class="card-resumo" 
+         [class.ativo]="grupoSelecionado === item.grupo_escolaridade"
+         (click)="selecionarGrupo(item.grupo_escolaridade)">
+      
+      <div class="card-glow" [ngClass]="'glow-' + i"></div>
+      
+      <div class="card-header">
+        <span class="card-grupo">{{ item.grupo_escolaridade }}</span>
+        <span class="card-percentual">{{ getPorcentagemDeputados(item.total_deputados) | number:'1.0-0' }}%</span>
+      </div>
+
+      <div class="card-body">
+        <div class="card-metric">
+          <span class="metric-num">{{ item.total_deputados }}</span>
+          <span class="metric-lbl">parlamentares</span>
+        </div>
+        
+        <div class="card-bar-bg">
+          <div class="card-bar-fill" 
+               [style.width.%]="getPorcentagemDeputados(item.total_deputados)"
+               [ngClass]="'bar-' + i">
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="footer-stat">
+          <span class="stat-lbl">Média de Gastos</span>
+          <span class="stat-val">{{ item.gasto_medio | currency:'BRL':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="footer-stat">
+          <span class="stat-lbl">Gasto Total</span>
+          <span class="stat-val-small">{{ item.gasto_total | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="carregando" class="spinner-container">
+    <div class="spinner"></div>
+    <p>Carregando parlamentares...</p>
+  </div>
+
+  <!-- Deputies Details List -->
+  <div *ngIf="!carregando && grupoSelecionado" class="detalhes-container glass">
+    <div class="detalhes-header">
+      <div>
+        <h3>Deputados em: <span class="highlight">{{ grupoSelecionado }}</span></h3>
+        <p class="sub-label">Ordenado pelos parlamentares com maior consumo da cota</p>
+      </div>
+
+      <div class="busca-wrapper">
+        <span class="busca-icon">🔍</span>
+        <input type="text" 
+               [(ngModel)]="filtroNome" 
+               placeholder="Buscar por nome, partido ou UF..." 
+               class="busca-input" />
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive">
+      <table class="tabela-deputados">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th class="col-partido">Partido</th>
+            <th class="col-uf">UF</th>
+            <th>Grau Declarado</th>
+            <th class="col-gastos">Total Gasto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dep of deputadosFiltrados">
+            <td>
+              <div class="dep-info">
+                <span class="dep-avatar">👤</span>
+                <span class="dep-nome">{{ dep.nome }}</span>
+              </div>
+            </td>
+            <td class="col-partido">
+              <span class="badge partido">{{ dep.partido }}</span>
+            </td>
+            <td class="col-uf">
+              <span class="badge uf">{{ dep.uf }}</span>
+            </td>
+            <td>
+              <span class="grau-declarado">{{ dep.escolaridade_limpa }}</span>
+            </td>
+            <td class="col-gastos">
+              <span class="valor-gasto">{{ dep.total_gasto | currency:'BRL':'symbol':'1.2-2' }}</span>
+            </td>
+          </tr>
+          <tr *ngIf="deputadosFiltrados.length === 0">
+            <td colspan="5" class="sem-dados">Nenhum parlamentar encontrado para esta busca.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
