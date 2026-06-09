@@ -314,4 +314,155 @@ def dashboard_fornecedores():
 
 
 
-    
+
+#respondendo questao 11
+@app.get("/panorama-partidos-destaques")
+def panorama_partidos_destaques():
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+
+    maior_gastador = conn.execute("""
+        SELECT
+            sgPartido AS partido,
+            ROUND(SUM(vlrLiquido), 2) AS valor
+        FROM Despesas
+        WHERE sgPartido IS NOT NULL
+          AND sgPartido <> ''
+        GROUP BY sgPartido
+        ORDER BY valor DESC
+        LIMIT 1
+    """).fetchone()
+
+    mais_proposicoes = conn.execute("""
+        SELECT
+            d.ultimoStatus_siglaPartido AS partido,
+            COUNT(*) AS valor
+        FROM PropAutores pa
+        JOIN Deputados d
+            ON pa.id_deputado = d.id_dep
+        WHERE d.ultimoStatus_siglaPartido IS NOT NULL
+          AND d.ultimoStatus_siglaPartido <> ''
+        GROUP BY d.ultimoStatus_siglaPartido
+        ORDER BY valor DESC
+        LIMIT 1
+    """).fetchone()
+
+    maior_bancada = conn.execute("""
+        SELECT
+            ultimoStatus_siglaPartido AS partido,
+            COUNT(*) AS valor
+        FROM Deputados
+        WHERE ultimoStatus_siglaPartido IS NOT NULL
+          AND ultimoStatus_siglaPartido <> ''
+        GROUP BY ultimoStatus_siglaPartido
+        ORDER BY valor DESC
+        LIMIT 1
+    """).fetchone()
+
+    conn.close()
+
+    return {
+        "maior_gastador": dict(maior_gastador),
+        "mais_proposicoes": dict(mais_proposicoes),
+        "maior_bancada": dict(maior_bancada)
+    }
+
+##############################################
+@app.get("/panorama-partidos-frequencia")
+def panorama_partidos_frequencia():
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+
+    query = """
+    SELECT
+        sgPartido AS partido,
+        COUNT(*) AS valor
+    FROM Despesas
+    WHERE sgPartido IS NOT NULL
+      AND sgPartido <> ''
+    GROUP BY sgPartido
+    ORDER BY valor DESC
+    """
+
+    resultado = conn.execute(query).fetchall()
+
+    conn.close()
+
+    return [dict(row) for row in resultado]
+
+##############################################
+@app.get("/panorama-partidos-proposicoes")
+def panorama_partidos_proposicoes():
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+
+    query = """
+    SELECT
+        d.ultimoStatus_siglaPartido AS partido,
+        COUNT(*) AS valor
+    FROM PropAutores pa
+    JOIN Deputados d
+        ON pa.id_deputado = d.id_dep
+    WHERE d.ultimoStatus_siglaPartido IS NOT NULL
+      AND d.ultimoStatus_siglaPartido <> ''
+    GROUP BY d.ultimoStatus_siglaPartido
+    ORDER BY valor DESC
+    """
+
+    resultado = conn.execute(query).fetchall()
+
+    conn.close()
+
+    return [dict(row) for row in resultado]
+
+  ##############################################
+@app.get("/panorama-partidos-gastos")
+def panorama_partidos_gastos():
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+
+    query = """
+    SELECT
+        sgPartido AS partido,
+        ROUND(SUM(vlrLiquido), 2) AS valor
+    FROM Despesas
+    WHERE sgPartido IS NOT NULL
+      AND sgPartido <> ''
+    GROUP BY sgPartido
+    ORDER BY valor DESC
+    """
+
+    resultado = conn.execute(query).fetchall()
+
+    conn.close()
+
+    return [dict(row) for row in resultado]
+
+##############################################
+@app.get("/panorama-partidos-nuvem-palavras")
+def panorama_partidos_nuvem_palavras():
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+
+    query = """
+    SELECT
+        tema,
+        COUNT(*) AS valor
+    FROM PropTemas
+    WHERE tema IS NOT NULL
+      AND tema <> ''
+    GROUP BY tema
+    ORDER BY valor DESC
+    LIMIT 50
+    """
+
+    resultado = conn.execute(query).fetchall()
+
+    conn.close()
+
+    return [dict(row) for row in resultado]

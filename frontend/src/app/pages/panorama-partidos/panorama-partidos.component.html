@@ -1,0 +1,144 @@
+<!-- Cabeçalho -->
+
+<div class="cabecalho">
+
+    <h1>Partidos</h1>
+
+    <p>
+        Esta seção apresenta uma visão consolidada dos partidos políticos
+        representados na Câmara dos Deputados. Os dados permitem comparar
+        indicadores relacionados à atuação parlamentar, incluindo frequência
+        em sessões, quantidade de proposições apresentadas, gastos realizados
+        por deputados de cada legenda e os principais temas abordados nas
+        atividades legislativas.
+    </p>
+
+    <p>
+        Utilize o menu abaixo para navegar entre os diferentes indicadores
+        disponíveis e analisar o desempenho dos partidos sob diferentes
+        perspectivas.
+    </p>
+
+</div>
+
+<!-- Menu -->
+
+<div class="menu-abas">
+
+    <button
+        [class.ativo]="abaSelecionada === 'frequencia'"
+        (click)="selecionarAba('frequencia')">
+
+        Frequência
+
+    </button>
+
+    <button
+        [class.ativo]="abaSelecionada === 'proposicoes'"
+        (click)="selecionarAba('proposicoes')">
+
+        Proposições
+
+    </button>
+
+    <button
+        [class.ativo]="abaSelecionada === 'gastos'"
+        (click)="selecionarAba('gastos')">
+
+        Ranking de Gastos
+
+    </button>
+
+    <button
+        [class.ativo]="abaSelecionada === 'nuvem'"
+        (click)="selecionarAba('nuvem')">
+
+        Nuvem de Palavras
+
+    </button>
+
+</div>
+
+<!-- Conteúdo -->
+
+<div class="conteudo-abas">
+
+    <!-- RANKING DE GASTOS -->
+
+    <div *ngIf="abaSelecionada === 'gastos'">
+
+        <div class="table-container">
+
+            <table class="tabela">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Partido</th>
+                        <th>Total de Gastos</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let item of dadosTabela; let i = index">
+
+                        <td>{{ i + 1 }}</td>
+
+                        <td>{{ item.partido }}</td>
+
+                        <td>
+                            R$ {{ item.valor | number:'1.2-2' }}
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- FREQUÊNCIA -->
+
+    <div *ngIf="abaSelecionada === 'frequencia'">
+
+        <p class="mensagem-indisponivel">
+
+            Dados de frequência ainda não disponíveis na base atual.
+
+        </p>
+
+    </div>
+
+    <!-- PROPOSIÇÕES -->
+
+    <div *ngIf="abaSelecionada === 'proposicoes'">
+
+        <p class="mensagem-indisponivel">
+
+            Dados de proposições ainda não disponíveis na base atual.
+
+        </p>
+
+    </div>
+
+    <!-- NUVEM DE PALAVRAS -->
+
+    <div *ngIf="abaSelecionada === 'nuvem'">
+
+        <p class="mensagem-indisponivel">
+
+            Dados para geração da nuvem de palavras ainda não disponíveis na base atual.
+
+        </p>
+
+    </div>
+
+</div>
