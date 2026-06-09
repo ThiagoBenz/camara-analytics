@@ -319,3 +319,10 @@ button:hover .icone-lupa {
     }
 
 }
+
+.cards-indicadores,
+.cards-destaques,
+.cards-acesso {
+
+    width: 100%;
+}
