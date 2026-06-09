@@ -43,6 +43,14 @@ export class ApiService {
     return this.http.get(url);
   }
 
+  getFornecedoresRanking(busca?: string, limit: number = 100, offset: number = 0) {
+    let url = `${this.apiUrl}/fornecedores-ranking?limit=${limit}&offset=${offset}`;
+    if (busca) {
+      url += `&busca=${encodeURIComponent(busca)}`;
+    }
+    return this.http.get(url);
+  }
+
   getNuvemPalavras(eixo: string) {
     return this.http.get(
       `${this.apiUrl}/nuvem-palavras/${encodeURIComponent(eixo)}`

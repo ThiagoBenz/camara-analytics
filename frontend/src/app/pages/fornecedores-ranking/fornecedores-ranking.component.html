@@ -1,0 +1,101 @@
+<div class="pagina">
+  <div class="header-container">
+    <div class="brand-badge">RANKING FINANCEIRO</div>
+    <h1 class="titulo-principal">Ranking de Fornecedores</h1>
+    <p class="descricao">
+      Classificação completa das empresas e prestadores de serviço que mais receberam recursos por meio da cota para exercício da atividade parlamentar.
+    </p>
+  </div>
+
+  <!-- Search and Actions Bar -->
+  <div class="busca-secao glass">
+    <form (submit)="buscar(); $event.preventDefault()" class="busca-form">
+      <div class="busca-input-wrapper">
+        <span class="busca-icon">🔍</span>
+        <input type="text" 
+               [(ngModel)]="termoBusca" 
+               name="termoBusca"
+               placeholder="Pesquisar por nome do fornecedor ou CNPJ/CPF..." 
+               class="busca-input" />
+      </div>
+      <div class="busca-botoes">
+        <button type="submit" class="btn-buscar">Buscar</button>
+        <button type="button" *ngIf="termoBuscaPesquisado" (click)="limparBusca()" class="btn-limpar">Limpar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="carregando" class="spinner-container">
+    <div class="spinner"></div>
+    <p>Buscando fornecedores...</p>
+  </div>
+
+  <!-- Results Area -->
+  <div *ngIf="!carregando" class="detalhes-container glass">
+    <div class="detalhes-header">
+      <h3 *ngIf="!termoBuscaPesquisado">Maiores Recebedores</h3>
+      <h3 *ngIf="termoBuscaPesquisado">Resultados para: <span class="highlight">"{{ termoBuscaPesquisado }}"</span></h3>
+      <p class="sub-label">Mostrando registros {{ rankingInicial }} a {{ rankingInicial + fornecedores.length - 1 }}</p>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive">
+      <table class="tabela-fornecedores">
+        <thead>
+          <tr>
+            <th class="col-pos">Posição</th>
+            <th>Fornecedor</th>
+            <th class="col-cnpj">CNPJ / CPF</th>
+            <th class="col-notas">Nº Despesas</th>
+            <th class="col-valor">Volume Recebido</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let forn of fornecedores; let idx = index" class="linha-fornecedor">
+            <td class="col-pos">
+              <span class="pos-badge" [ngClass]="'pos-' + (rankingInicial + idx)">
+                #{{ rankingInicial + idx }}
+              </span>
+            </td>
+            <td>
+              <div class="forn-info">
+                <span class="forn-avatar">🏢</span>
+                <span class="forn-nome">{{ forn.nome_fornecedor }}</span>
+              </div>
+            </td>
+            <td class="col-cnpj">
+              <span class="cnpj-texto">{{ forn.cnpj_cpf }}</span>
+            </td>
+            <td class="col-notas">
+              <span class="badge notas">{{ forn.qtd_despesas | number }}</span>
+            </td>
+            <td class="col-valor">
+              <span class="valor-total">{{ forn.total_recebido | currency:'BRL':'symbol':'1.2-2' }}</span>
+            </td>
+          </tr>
+          <tr *ngIf="fornecedores.length === 0">
+            <td colspan="5" class="sem-dados">Nenhum fornecedor encontrado.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination controls -->
+    <div class="paginacao-container" *ngIf="fornecedores.length > 0 || paginaAtual > 1">
+      <button (click)="paginaAnterior()" 
+              [disabled]="paginaAtual === 1" 
+              class="btn-paginacao">
+        ← Anterior
+      </button>
+      
+      <span class="paginacao-info">Página <strong>{{ paginaAtual }}</strong></span>
+      
+      <button (click)="proximaPagina()" 
+              [disabled]="!possuiMais" 
+              class="btn-paginacao">
+        Próxima →
+      </button>
+    </div>
+  </div>
+</div>

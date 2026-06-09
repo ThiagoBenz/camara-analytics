@@ -224,6 +224,40 @@ def escolaridade_deputados(grupo: str = None):
         conn.close()
 
 
+@app.get("/fornecedores-ranking")
+def fornecedores_ranking(busca: str = None, limit: int = 100, offset: int = 0):
+    """Retorna o ranking de fornecedores com base no somatório do volume financeiro."""
+    conn = get_connection()
+    query = """
+    SELECT 
+        txtCNPJCPF AS cnpj_cpf, 
+        txtFornecedor AS nome_fornecedor, 
+        SUM(vlrLiquido) AS total_recebido,
+        COUNT(*) AS qtd_despesas
+    FROM Despesas
+    WHERE txtCNPJCPF IS NOT NULL AND txtCNPJCPF != ''
+    """
+    params = []
+    if busca:
+        query += " AND (txtFornecedor LIKE ? OR txtCNPJCPF LIKE ?)"
+        params.extend([f"%{busca}%", f"%{busca}%"])
+    
+    query += """
+    GROUP BY txtCNPJCPF
+    ORDER BY total_recebido DESC
+    LIMIT ? OFFSET ?
+    """
+    params.extend([limit, offset])
+    
+    try:
+        resultado = conn.execute(query, params).fetchall()
+        return [dict(row) for row in resultado]
+    except sqlite3.OperationalError:
+        return []
+    finally:
+        conn.close()
+
+
 @app.get("/nuvem-palavras/{eixo}")
 def nuvem_palavras(eixo: str, top: int = 50):
     """Gera nuvem simples (top palavras) para o eixo informado com base nas despesas dos deputados classificados.

@@ -5,6 +5,7 @@ import { CategoriasGastosComponent} from'./pages/categorias-gastos/categorias-ga
 import { EixosDashboardComponent } from './pages/eixos-dashboard/eixos-dashboard.component';
 import {CorrelacaoFornecedorDeputadoComponent} from './pages/correlacao-fornecedor-deputado/correlacao-fornecedor-deputado.component';
 import { EscolaridadeDashboardComponent } from './pages/escolaridade-dashboard/escolaridade-dashboard.component';
+import { FornecedoresRankingComponent } from './pages/fornecedores-ranking/fornecedores-ranking.component';
 
 export const routes: Routes = [
 
@@ -36,6 +37,10 @@ export const routes: Routes = [
   {
     path: 'escolaridade',
     component: EscolaridadeDashboardComponent
+  },
+  {
+    path: 'fornecedores',
+    component: FornecedoresRankingComponent
   }
 
 ];
