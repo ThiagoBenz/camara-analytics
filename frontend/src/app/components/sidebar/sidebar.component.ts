@@ -16,7 +16,7 @@ export class SidebarComponent {
 
   @Input() menuAberto = true;
 
-  deputadosAberto = false;
+  deputadosAberto = true;
 
   toggleDeputados(): void {
 
