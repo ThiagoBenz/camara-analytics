@@ -1,0 +1,154 @@
+<div class="sidebar"
+	[class.fechada]="!menuAberto">
+
+    <div class="logo">
+
+        <h2>🇧🇷 Câmara Analytics</h2>
+
+    </div>
+
+    <nav>
+
+        <!-- HOME -->
+
+        <a
+            routerLink="/home"
+            routerLinkActive="ativo">
+
+            🏠 Home
+
+        </a>
+
+        <!-- DEPUTADOS FEDERAIS -->
+
+        <div class="grupo-menu">
+
+            <div
+                class="titulo-menu"
+                (click)="toggleDeputados()">
+
+                <span>
+                    {{ deputadosAberto ? '▼' : '▶' }}
+                </span>
+
+                <span>
+                    🏛️ Deputados Federais
+                </span>
+
+            </div>
+
+            <div
+                class="submenu"
+                *ngIf="deputadosAberto">
+
+                <a
+                    routerLink="/ranking-gastos"
+                    routerLinkActive="ativo">
+
+                    📈 Ranking de Gastos
+
+                </a>
+
+                <a
+                    routerLink="/categorias-gastos"
+                    routerLinkActive="ativo">
+
+                    📂 Categorias de Gastos
+
+                </a>
+
+                <a
+                    routerLink="/correlacao-fornecedor-deputado"
+                    routerLinkActive="ativo">
+
+                    🏢 Fornecedores (Por Deputado)
+
+                </a>
+
+                <a
+                    routerLink="/fornecedores"
+                    routerLinkActive="ativo">
+
+                    🏆 Ranking de Fornecedores
+
+                </a>
+
+                <a
+                    routerLink="/panorama-partidos"
+                    routerLinkActive="ativo">
+
+                    🎯 Partidos
+
+                </a>
+
+                <a
+                    routerLink="/eixos"
+                    routerLinkActive="ativo">
+
+                    ⚖️ Eixos Temáticos
+
+                </a>
+
+                <a
+                    routerLink="/escolaridade"
+                    routerLinkActive="ativo">
+
+                    🎓 Escolaridade
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- SENADORES -->
+
+        <div class="grupo-menu">
+
+            <div class="titulo-menu">
+
+                ▶ 🏛️ Senadores
+
+            </div>
+
+        </div>
+
+        <!-- PRESIDENTES -->
+
+        <div class="grupo-menu">
+
+            <div class="titulo-menu">
+
+                ▶ 🇧🇷 Presidentes
+
+            </div>
+
+        </div>
+
+        <!-- DEPUTADOS ESTADUAIS -->
+
+        <div class="grupo-menu">
+
+            <div class="titulo-menu">
+
+                ▶ 🏛️ Deputados Estaduais
+
+            </div>
+
+        </div>
+
+        <!-- GOVERNADORES -->
+
+        <div class="grupo-menu">
+
+            <div class="titulo-menu">
+
+                ▶ 🏛️ Governadores
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</div>

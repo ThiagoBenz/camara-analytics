@@ -63,4 +63,52 @@ export class ApiService {
     );
   }
 
+  getDashboard() {
+    return this.http.get(
+      `${this.apiUrl}/dashboard`
+    );
+  }
+
+  getDashboardDestaques() {
+    return this.http.get(
+      `${this.apiUrl}/dashboard-destaques`
+    );
+  }
+
+  getDashboardFornecedores() {
+    return this.http.get(
+      `${this.apiUrl}/dashboard-fornecedores`
+    );
+  }
+
+  getPanoramaPartidosDestaques() {
+    return this.http.get(
+      `${this.apiUrl}/panorama-partidos-destaques`
+    );
+  }
+
+  getPanoramaPartidosFrequencia() {
+    return this.http.get(
+      `${this.apiUrl}/panorama-partidos-frequencia`
+    );
+  }
+
+  getPanoramaPartidosProposicoes() {
+    return this.http.get(
+      `${this.apiUrl}/panorama-partidos-proposicoes`
+    );
+  }
+
+  getPanoramaPartidosGastos() {
+    return this.http.get(
+      `${this.apiUrl}/panorama-partidos-gastos`
+    );
+  }
+
+  getPanoramaPartidosNuvemPalavras() {
+    return this.http.get(
+      `${this.apiUrl}/panorama-partidos-nuvem-palavras`
+    );
+  }
+
 }

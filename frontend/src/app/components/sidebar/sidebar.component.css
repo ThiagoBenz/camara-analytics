@@ -1,0 +1,273 @@
+/* =========================
+   Sidebar
+========================= */
+
+.sidebar {
+
+    width: 280px;
+
+    min-height: 100vh;
+
+    background: linear-gradient(
+        180deg,
+        #1976d2,
+        #1565c0
+    );
+
+    color: white;
+
+    padding: 25px;
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    z-index: 2000;
+
+    transition: transform .3s ease;
+}
+
+/* usada quando o menu for recolhido */
+
+.sidebar.fechada {
+
+    transform: translateX(-100%);
+}
+
+/* =========================
+   Logo
+========================= */
+
+.logo {
+
+    margin-top: 70px;
+
+    margin-bottom: 35px;
+
+    padding-bottom: 20px;
+
+    border-bottom: 1px solid rgba(255,255,255,.20);
+}
+
+.logo h2 {
+
+    margin: 0;
+
+    font-size: 26px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+}
+
+/* =========================
+   Botão Menu
+========================= */
+
+.botao-menu {
+
+    width: 48px;
+
+    height: 48px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.15);
+
+    color: white;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+    margin-bottom: 20px;
+}
+
+.botao-menu:hover {
+
+    background: rgba(255,255,255,.25);
+}
+
+/* =========================
+   Navegação
+========================= */
+
+nav {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+/* =========================
+   Links
+========================= */
+
+.sidebar a {
+
+    display: block;
+
+    text-decoration: none;
+
+    color: white;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    transition: all .2s ease;
+
+    font-size: 15px;
+}
+
+.sidebar a:hover {
+
+    background: rgba(255,255,255,.10);
+
+    transform: translateX(3px);
+}
+
+/* link ativo */
+
+.sidebar a.ativo {
+
+    background: rgba(255,255,255,.18);
+
+    border-left: 4px solid white;
+
+    font-weight: 600;
+}
+
+/* =========================
+   Grupos
+========================= */
+
+.grupo-menu {
+
+    margin-bottom: 10px;
+}
+
+/* =========================
+   Título do grupo
+========================= */
+
+.titulo-menu {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    transition: all .2s ease;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+.titulo-menu:hover {
+
+    background: rgba(255,255,255,.10);
+
+    transform: translateX(3px);
+}
+
+/* =========================
+   Submenu
+========================= */
+
+.submenu {
+
+    margin-left: 20px;
+
+    margin-top: 8px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.submenu a {
+
+    font-size: 14px;
+
+    padding: 10px 14px;
+}
+
+/* =========================
+   Em breve
+========================= */
+
+.em-breve {
+
+    display: block;
+
+    margin-left: 20px;
+
+    margin-top: 5px;
+
+    color: rgba(255,255,255,.75);
+
+    font-size: 13px;
+}
+
+/* =========================
+   Scrollbar
+========================= */
+
+.sidebar::-webkit-scrollbar {
+
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+
+    background: rgba(255,255,255,.25);
+
+    border-radius: 10px;
+}
+
+/* =========================
+   Responsividade
+========================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+
+        width: 260px;
+    }
+
+    .logo h2 {
+
+        font-size: 22px;
+    }
+}
