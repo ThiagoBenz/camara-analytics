@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import sqlite3
+from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -10,7 +11,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-DATABASE = "database/camara.db"
+BASE_DIR = Path(__file__).resolve().parent
+DATABASE = BASE_DIR / "database" / "camara.db"
+
+
+def get_connection() -> sqlite3.Connection:
+    conn = sqlite3.connect(str(DATABASE))
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 @app.get("/")
@@ -21,8 +29,7 @@ def home():
 @app.get("/deputados")
 def listar_deputados():
 
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
 
     query = """
     SELECT DISTINCT txNomeParlamentar
@@ -44,8 +51,7 @@ def listar_deputados():
 @app.get("/ranking-gastos")
 def ranking_gastos():
 
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
 
     cursor = conn.cursor()
 
@@ -76,8 +82,7 @@ def ranking_gastos():
 @app.get("/categorias-gastos")
 def categorias_gastos():
 
-    conn = sqlite3.connect("database/camara.db")
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
 
     query = """
     SELECT
@@ -100,8 +105,7 @@ def categorias_gastos():
 @app.get("/deputado-gastos/{nome}")
 def gastos_deputado(nome: str):
 
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
 
     query = """
     SELECT
@@ -123,13 +127,181 @@ def gastos_deputado(nome: str):
     return gastos
 
 
+@app.get("/eixos-deputados")
+def eixos_deputados():
+    """Retorna lista de deputados com eixo, score e dados agregados de despesas."""
+    conn = get_connection()
+    query = """
+    SELECT
+        de.id_deputado,
+        de.nome,
+        de.partido,
+        de.uf,
+        de.eixo,
+        de.score,
+        de.total_gasto
+    FROM DeputyEixo de
+    ORDER BY de.score DESC, de.total_gasto DESC
+    """
+    try:
+        resultado = conn.execute(query).fetchall()
+        return [dict(row) for row in resultado]
+    except sqlite3.OperationalError:
+        return []
+    finally:
+        conn.close()
 
+
+@app.get("/eixos-resumo")
+def eixos_resumo():
+    """Retorna contagem de deputados por eixo."""
+    conn = get_connection()
+    query = """
+    SELECT eixo, COUNT(*) AS total_deputados, COALESCE(SUM(score), 0) AS score_total, COALESCE(SUM(total_gasto), 0) AS gasto_total
+    FROM DeputyEixo
+    GROUP BY eixo
+    ORDER BY total_deputados DESC, score_total DESC
+    """
+    try:
+        resultado = conn.execute(query).fetchall()
+        return [dict(row) for row in resultado]
+    except sqlite3.OperationalError:
+        return []
+    finally:
+        conn.close()
+
+
+@app.get("/escolaridade-resumo")
+def escolaridade_resumo():
+    """Retorna contagem, gastos totais e médios por grupo de escolaridade."""
+    conn = get_connection()
+    query = """
+    SELECT 
+        grupo_escolaridade, 
+        COUNT(*) AS total_deputados, 
+        SUM(total_gasto) AS gasto_total, 
+        AVG(total_gasto) AS gasto_medio
+    FROM DeputyEscolaridade
+    GROUP BY grupo_escolaridade
+    ORDER BY total_deputados DESC
+    """
+    try:
+        resultado = conn.execute(query).fetchall()
+        return [dict(row) for row in resultado]
+    except sqlite3.OperationalError:
+        return []
+    finally:
+        conn.close()
+
+
+@app.get("/escolaridade-deputados")
+def escolaridade_deputados(grupo: str = None):
+    """Retorna lista de deputados pertencentes a um grupo específico ou todos."""
+    conn = get_connection()
+    query = """
+    SELECT 
+        id_deputado, 
+        nome, 
+        partido, 
+        uf, 
+        escolaridade_original, 
+        escolaridade_limpa, 
+        grupo_escolaridade, 
+        total_gasto
+    FROM DeputyEscolaridade
+    """
+    params = []
+    if grupo:
+        query += " WHERE grupo_escolaridade = ?"
+        params.append(grupo)
+    query += " ORDER BY total_gasto DESC"
+    try:
+        resultado = conn.execute(query, params).fetchall()
+        return [dict(row) for row in resultado]
+    except sqlite3.OperationalError:
+        return []
+    finally:
+        conn.close()
+
+
+@app.get("/fornecedores-ranking")
+def fornecedores_ranking(busca: str = None, limit: int = 100, offset: int = 0):
+    """Retorna o ranking de fornecedores com base no somatório do volume financeiro."""
+    conn = get_connection()
+    query = """
+    SELECT 
+        txtCNPJCPF AS cnpj_cpf, 
+        txtFornecedor AS nome_fornecedor, 
+        SUM(vlrLiquido) AS total_recebido,
+        COUNT(*) AS qtd_despesas
+    FROM Despesas
+    WHERE txtCNPJCPF IS NOT NULL AND txtCNPJCPF != ''
+    """
+    params = []
+    if busca:
+        query += " AND (txtFornecedor LIKE ? OR txtCNPJCPF LIKE ?)"
+        params.extend([f"%{busca}%", f"%{busca}%"])
+    
+    query += """
+    GROUP BY txtCNPJCPF
+    ORDER BY total_recebido DESC
+    LIMIT ? OFFSET ?
+    """
+    params.extend([limit, offset])
+    
+    try:
+        resultado = conn.execute(query, params).fetchall()
+        return [dict(row) for row in resultado]
+    except sqlite3.OperationalError:
+        return []
+    finally:
+        conn.close()
+
+
+@app.get("/nuvem-palavras/{eixo}")
+def nuvem_palavras(eixo: str, top: int = 50):
+    """Gera nuvem simples (top palavras) para o eixo informado com base nas despesas dos deputados classificados.
+    Retorna JSON: [{"word": ..., "count": ...}, ...]
+    """
+    import re
+    from collections import Counter
+
+    conn = get_connection()
+
+    # coletar despesas relacionadas aos deputados marcados com esse eixo
+    sql = """
+    SELECT d.txtDescricao, d.txtDescricaoEspecificacao, d.txtFornecedor, d.txtPassageiro, d.txtTrecho
+    FROM Despesas d
+    JOIN DeputyEixo de ON de.id_deputado = d.nuDeputadoId
+    WHERE de.eixo = ?
+    """
+
+    texts = []
+    try:
+        for row in conn.execute(sql, (eixo,)).fetchall():
+            texts.append(" ".join([row[0] or "", row[1] or "", row[2] or "", row[3] or "", row[4] or ""]))
+    except sqlite3.OperationalError:
+        return []
+    finally:
+        conn.close()
+
+    if not texts:
+        return []
+
+    combined = " ".join(texts).lower()
+    words = re.findall(r"\b[\wà-ú]+\b", combined)
+    stopwords = set(["de", "da", "do", "e", "o", "a", "dos", "das", "para", "com", "em", "por", "na", "no"])
+    filtered = [w for w in words if w not in stopwords and len(w) > 2]
+
+    counts = Counter(filtered).most_common(top)
+
+    return [{"word": w, "count": c} for w, c in counts]
 
 
 @app.get("/teste")
 def teste():
 
-    conn = sqlite3.connect(DATABASE)
+    conn = sqlite3.connect(str(DATABASE))
     conn.row_factory = sqlite3.Row
 
     query = """
@@ -145,13 +317,10 @@ def teste():
     return dados
 
 
-
-
-
 @app.get("/correlacao-fornecedor-deputado/{nome}")
 def deputado_fornecedores(nome: str):
 
-    conn = sqlite3.connect(DATABASE)
+    conn = sqlite3.connect(str(DATABASE))
     conn.row_factory = sqlite3.Row
 
     query = """

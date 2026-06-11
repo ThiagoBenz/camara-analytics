@@ -20,15 +20,11 @@ export class AppComponent {
   menuAberto = true;
 
   toggleSidebar(): void {
-
     this.menuAberto = !this.menuAberto;
-
   }
 
   fecharSidebar(): void {
-
     this.menuAberto = false;
-
   }
 
 }
