@@ -1,0 +1,105 @@
+/* =========================
+   Cabeçalho Principal
+========================= */
+
+.header {
+
+    height: 100px;
+
+    width: 100%;
+
+    background: #1976d2;
+
+    color: white;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 40px 0 100px;
+
+    box-sizing: border-box;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+
+}
+
+/* =========================
+   Área Esquerda
+========================= */
+
+.header-left {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+}
+
+/* =========================
+   Linha do Título
+========================= */
+
+.titulo {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+/* =========================
+   Logo
+========================= */
+
+.logo {
+
+    font-size: 28px;
+
+}
+
+/* =========================
+   Título
+========================= */
+
+.header-left h1 {
+
+    margin: 0;
+
+    font-size: 34px;
+
+    font-weight: 700;
+
+}
+
+/* =========================
+   Subtítulo
+========================= */
+
+.header-left p {
+
+    margin: 6px 0 0 42px;
+
+    font-size: 15px;
+
+    color: rgba(255,255,255,.85);
+
+}
+
+/* =========================
+   Área Direita
+========================= */
+
+.header-right {
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+}
