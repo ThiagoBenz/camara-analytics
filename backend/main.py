@@ -14,6 +14,23 @@ app.add_middleware(
 BASE_DIR = Path(__file__).resolve().parent
 DATABASE = BASE_DIR / "database" / "camara.db"
 
+TIPOS_EVENTO_RELEVANTES = [
+    "Reunião Deliberativa",
+    "Sessão Deliberativa",
+    "Audiência Pública e Deliberação",
+    "Reunião de Instalação e Eleição",
+    "Reunião de Comparecimento de Ministro(a)",
+]
+
+SITUACOES_ENCERRADAS = [
+    "Encerrada",
+    "Encerrada (Final)",
+    "Encerrada (Termo)",
+]
+
+PESO_PROPOSICOES = 0.70
+PESO_PRESENCA    = 0.30
+
 
 def get_connection() -> sqlite3.Connection:
     conn = sqlite3.connect(str(DATABASE))
@@ -635,3 +652,472 @@ def panorama_partidos_nuvem_palavras():
     conn.close()
 
     return [dict(row) for row in resultado]
+
+
+
+#################################################
+#################################################
+import math
+
+
+@app.get("/custo-beneficio")
+def custo_beneficio():
+
+    conn = get_connection()
+
+    # ==========================================
+    # GASTOS
+    # ==========================================
+
+    sql_gastos = """
+    SELECT
+
+        d.id_dep,
+
+        d.nome_civil_dep,
+
+        d.nome_eleitoral_dep,
+
+        d.ultimoStatus_siglaPartido,
+
+        COALESCE(
+            SUM(g.vlrLiquido),
+            0
+        ) AS gasto_total
+
+    FROM Deputados d
+
+    LEFT JOIN Despesas g
+
+        ON d.nome_eleitoral_dep = g.txNomeParlamentar
+
+    GROUP BY
+
+        d.id_dep,
+
+        d.nome_civil_dep,
+
+        d.nome_eleitoral_dep,
+
+        d.ultimoStatus_siglaPartido
+    """
+
+    rows_gastos = conn.execute(
+        sql_gastos
+    ).fetchall()
+
+    # ==========================================
+    # PROPOSIÇÕES
+    # ==========================================
+
+    sql_prop = """
+    SELECT
+
+        id_deputado,
+
+        COUNT(
+            DISTINCT id_proposicao
+        ) AS total_proposicoes
+
+    FROM PropAutores
+
+    GROUP BY id_deputado
+    """
+
+    prop_map = {
+
+        r["id_deputado"]:
+
+        r["total_proposicoes"]
+
+        for r in conn.execute(
+            sql_prop
+        ).fetchall()
+
+    }
+
+    # ==========================================
+    # PRESENÇAS
+    # ==========================================
+
+    tipos_ph = ",".join(
+
+        "?" * len(
+            TIPOS_EVENTO_RELEVANTES
+        )
+
+    )
+
+    situacoes_ph = ",".join(
+
+        "?" * len(
+            SITUACOES_ENCERRADAS
+        )
+
+    )
+
+    parametros = (
+
+        TIPOS_EVENTO_RELEVANTES
+
+        +
+
+        SITUACOES_ENCERRADAS
+
+    )
+
+    sql_pres = f"""
+    SELECT
+
+        pd.id_deputado,
+
+        COUNT(
+            DISTINCT pd.id_evento
+        ) AS total_presencas
+
+    FROM PresencaDeputados pd
+
+    INNER JOIN Eventos e
+
+        ON pd.id_evento = e.id_evento
+
+    WHERE
+
+        e.tipo_evento IN ({tipos_ph})
+
+    AND
+
+        e.situacao_evento IN ({situacoes_ph})
+
+    GROUP BY
+
+        pd.id_deputado
+    """
+
+    pres_map = {
+
+        r["id_deputado"]:
+
+        r["total_presencas"]
+
+        for r in conn.execute(
+
+            sql_pres,
+
+            parametros
+
+        ).fetchall()
+
+    }
+
+    conn.close()
+
+    # ==========================================
+    # CONSOLIDAÇÃO
+    # ==========================================
+
+    deputados = []
+
+    for row in rows_gastos:
+
+        deputados.append({
+
+            "id_dep":
+
+            row["id_dep"],
+
+            "nome_civil_dep":
+
+            row["nome_civil_dep"],
+
+            "nome_eleitoral_dep":
+
+            row["nome_eleitoral_dep"],
+
+            "ultimoStatus_siglaPartido":
+
+            row["ultimoStatus_siglaPartido"],
+
+            "gasto_total":
+
+            float(
+
+                row["gasto_total"]
+
+            ),
+
+            "total_proposicoes":
+
+            prop_map.get(
+
+                row["id_dep"],
+
+                0
+
+            ),
+
+            "total_presencas":
+
+            pres_map.get(
+
+                row["id_dep"],
+
+                0
+
+            )
+
+        })
+
+    # ==========================================
+    # NORMALIZAÇÃO
+    # ==========================================
+
+    max_log_prop = math.log(
+
+        max(
+
+            d["total_proposicoes"]
+
+            for d in deputados
+
+        ) + 1
+
+    )
+
+    max_pres = max(
+
+        d["total_presencas"]
+
+        for d in deputados
+
+    ) or 1
+
+    max_log_gasto = math.log(
+
+        max(
+
+            d["gasto_total"]
+
+            for d in deputados
+
+        ) + 1
+
+    )
+
+    # ==========================================
+    # CÁLCULO
+    # ==========================================
+
+    for d in deputados:
+
+        log_prop = math.log(
+
+            d["total_proposicoes"]
+
+            + 1
+
+        )
+
+        log_gasto = math.log(
+
+            d["gasto_total"]
+
+            + 1
+
+        )
+
+        nota_prop = (
+
+            log_prop
+
+            /
+
+            max_log_prop
+
+        ) * 10
+
+        nota_pres = (
+
+            math.sqrt(
+
+                d["total_presencas"]
+
+            )
+
+            /
+
+            math.sqrt(
+
+                max_pres
+
+            )
+
+        ) * 10
+
+        nota_gasto = (
+
+            log_gasto
+
+            /
+
+            max_log_gasto
+
+        ) * 10
+
+        beneficio = (
+
+            PESO_PROPOSICOES
+
+            * nota_prop
+
+        ) + (
+
+            PESO_PRESENCA
+
+            * nota_pres
+
+        )
+
+        eficiencia_gasto = (
+
+            10
+
+            - nota_gasto
+
+        )
+
+        indice = (
+
+            0.80
+
+            * beneficio
+
+        ) + (
+
+            0.20
+
+            * eficiencia_gasto
+
+        )
+
+        presenca_relativa = (
+
+            math.sqrt(
+
+                d["total_presencas"]
+
+            )
+
+            /
+
+            math.sqrt(
+
+                max_pres
+
+            )
+
+        ) * 100
+
+        d["presenca_relativa"] = round(
+
+            presenca_relativa,
+
+            1
+
+        )
+
+        d["beneficio"] = round(
+
+            beneficio,
+
+            2
+
+        )
+
+        d["indice"] = round(
+
+            indice,
+
+            2
+
+        )
+
+    # ==========================================
+    # ORDENAÇÃO
+    # ==========================================
+
+    deputados.sort(
+
+        key=lambda x:
+
+        x["indice"],
+
+        reverse=True
+
+    )
+
+    # ==========================================
+    # RETORNO
+    # ==========================================
+
+    resultado = []
+
+    for i, d in enumerate(
+
+        deputados,
+
+        start=1
+
+    ):
+
+        resultado.append({
+
+            "ranking":
+
+            i,
+
+            "id_dep":
+
+            d["id_dep"],
+
+            "nome_civil_dep":
+
+            d["nome_civil_dep"],
+
+            "nome_eleitoral_dep":
+
+            d["nome_eleitoral_dep"],
+
+            "ultimoStatus_siglaPartido":
+
+            d["ultimoStatus_siglaPartido"],
+
+            "gasto_total":
+
+            round(
+
+                d["gasto_total"],
+
+                2
+
+            ),
+
+            "total_proposicoes":
+
+            d["total_proposicoes"],
+
+            "presenca_relativa":
+
+            d["presenca_relativa"],
+
+            "beneficio":
+
+            d["beneficio"],
+
+            "indice":
+
+            d["indice"]
+
+        })
+
+    return resultado

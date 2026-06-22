@@ -1,0 +1,246 @@
+.pagina{
+
+  padding:40px;
+
+}
+
+
+.cabecalho{
+
+  text-align:center;
+
+  margin-bottom:40px;
+
+}
+
+
+.cabecalho h1{
+
+  font-size:3rem;
+
+  color:#1565c0;
+
+  margin-bottom:10px;
+
+}
+
+
+.subtitulo{
+
+  font-size:1.5rem;
+
+  color:#666;
+
+}
+
+
+.cards{
+
+  display:grid;
+
+  grid-template-columns:repeat(3,1fr);
+
+  gap:30px;
+
+  margin-bottom:40px;
+
+}
+
+
+.card{
+
+  padding:35px;
+
+  border-radius:20px;
+
+  box-shadow:0 5px 15px rgba(0,0,0,0.08);
+
+}
+
+.card:hover {
+
+  transform: translateY(-8px);
+
+  box-shadow:
+
+    0 12px 24px
+
+    rgba(0,0,0,0.15);
+
+}
+
+.card h3{
+
+  margin-bottom:30px;
+
+}
+
+
+.card h2{
+
+  font-size:2rem;
+
+  margin-bottom:20px;
+
+}
+
+
+.card span{
+
+  font-size:2rem;
+
+  font-weight:700;
+
+}
+
+
+.card-ouro{
+
+  background:#fff8ef;
+
+  border-left:8px solid #ff9800;
+
+}
+
+
+.card-azul{
+
+  background:#eef4ff;
+
+  border-left:8px solid #2563eb;
+
+}
+
+
+.card-verde{
+
+  background:#eefdf3;
+
+  border-left:8px solid #16a34a;
+
+}
+
+
+.pesquisa{
+
+  margin-bottom:30px;
+
+}
+
+
+.pesquisa input{
+
+  width:400px;
+
+  padding:15px;
+
+  border-radius:12px;
+
+  border:1px solid #ccc;
+
+}
+
+
+.tabela-container{
+
+  overflow:hidden;
+
+  border-radius:20px;
+
+}
+
+
+table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+}
+
+
+thead{
+
+  background:#1976d2;
+
+  color:white;
+
+}
+
+
+th{
+
+  padding:22px;
+
+}
+
+
+td{
+
+  padding:20px;
+
+  text-align:center;
+
+}
+
+
+tbody tr:nth-child(even){
+
+  background:#f4f6f9;
+
+}
+
+
+tbody tr:nth-child(odd){
+
+  background:#ffffff;
+
+}
+
+
+tbody tr:hover{
+
+  background:#eaf4ff;
+
+}
+
+
+.badge{
+
+  padding:12px 18px;
+
+  border-radius:999px;
+
+  font-weight:700;
+
+  color:white;
+
+}
+
+
+.excelente{
+
+  background:#2e7d32;
+
+}
+
+
+.bom{
+
+  background:#1976d2;
+
+}
+
+
+.regular{
+
+  background:#f57c00;
+
+}
+
+
+.baixo{
+
+  background:#d32f2f;
+
+}
