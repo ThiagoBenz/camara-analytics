@@ -1,0 +1,224 @@
+<div class="pagina">
+
+  <div class="cabecalho">
+
+    <h1>
+
+      🏆 Ranking de Custo x Benefício Parlamentar
+
+    </h1>
+
+    <p class="subtitulo">
+
+      Avaliação parlamentar considerando gastos, proposições e participação nos eventos.
+
+    </p>
+
+  </div>
+
+
+  <div class="cards">
+
+    <div class="card card-ouro">
+
+      <h3>
+
+        🥇 Melhor Índice
+
+      </h3>
+
+      <h2>
+
+        {{ melhorIndice.nome_civil_dep }}
+
+      </h2>
+
+      <span>
+
+        {{ melhorIndice.indice | number:'1.2-2' }}
+
+      </span>
+
+    </div>
+
+
+    <div class="card card-azul">
+
+      <h3>
+
+        📜 Mais Propositivo
+
+      </h3>
+
+      <h2>
+
+        {{ maisPropositivo.nome_civil_dep }}
+
+      </h2>
+
+      <span>
+
+        {{ maisPropositivo.total_proposicoes }}
+
+      </span>
+
+    </div>
+
+
+    <div class="card card-verde">
+
+      <h3>
+
+        🏛️ Maior Presença Relativa
+
+      </h3>
+
+      <h2>
+
+        {{ maiorPresenca.nome_civil_dep }}
+
+      </h2>
+
+      <span>
+
+        {{ maiorPresenca.presenca_relativa | number:'1.2-2' }}%
+
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <div class="pesquisa">
+
+    <input
+
+      type="text"
+
+      placeholder="🔍 Pesquisar deputado..."
+
+      [(ngModel)]="termoPesquisa"
+
+      (input)="pesquisar()"
+
+    >
+
+  </div>
+
+
+  <div class="tabela-container">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>#</th>
+
+          <th>Deputado</th>
+
+          <th>Partido</th>
+
+          <th>Gasto</th>
+
+          <th>Proposições</th>
+
+          <th>Presença (%)</th>
+
+          <th>Índice (0-10)</th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        <tr
+
+          *ngFor="let deputado of deputadosFiltrados"
+
+        >
+
+          <td>
+
+            {{ deputado.ranking }}
+
+          </td>
+
+
+          <td>
+
+            {{ deputado.nome_civil_dep }}
+
+          </td>
+
+
+          <td>
+
+            {{ deputado.ultimoStatus_siglaPartido }}
+
+          </td>
+
+
+          <td>
+
+            {{ deputado.gasto_total | currency:'BRL' }}
+
+          </td>
+
+
+          <td>
+
+            {{ deputado.total_proposicoes }}
+
+          </td>
+
+
+          <td>
+
+            {{ deputado.presenca_relativa | number:'1.2-2' }}%
+
+          </td>
+
+
+          
+
+
+          <td>
+
+            <span
+
+              class="badge"
+
+              [ngClass]="{
+
+                    'excelente': deputado.indice >= 8,
+
+                    'bom': deputado.indice >= 6 && deputado.indice < 8,
+
+                    'regular': deputado.indice >= 4 && deputado.indice < 6,
+
+                    'baixo': deputado.indice < 4
+
+                    }"
+
+            >
+
+              {{ deputado.indice | number:'1.2-2' }}
+
+            </span>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
