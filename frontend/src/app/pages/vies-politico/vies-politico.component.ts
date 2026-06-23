@@ -18,6 +18,21 @@ import {
 
 } from '../../services/api.service';
 
+import {
+
+  Chart,
+
+  registerables
+
+} from 'chart.js';
+
+
+Chart.register(
+
+  ...registerables
+
+);
+
 
 @Component({
 
@@ -66,6 +81,12 @@ implements OnInit {
   deputadosOriginais:any[] = [];
 
 
+  graficoDistribuicao:any;
+
+
+  graficoTemas:any;
+
+
   constructor(
 
     private api: ApiService
@@ -87,6 +108,7 @@ implements OnInit {
       .getViesPolitico()
 
       .subscribe((res:any)=>{
+
 
         this.cards = res.cards;
 
@@ -113,7 +135,239 @@ implements OnInit {
 
         ];
 
+
+        setTimeout(()=>{
+
+          this.criarGraficos();
+
+        },100);
+
       });
+
+  }
+
+
+  criarGraficos(){
+
+
+    if(
+
+      this.graficoDistribuicao
+
+    ){
+
+      this.graficoDistribuicao.destroy();
+
+    }
+
+
+    if(
+
+      this.graficoTemas
+
+    ){
+
+      this.graficoTemas.destroy();
+
+    }
+
+
+    // ==========================
+
+    // DISTRIBUIÇÃO IDEOLÓGICA
+
+    // ==========================
+
+
+    this.graficoDistribuicao =
+
+    new Chart(
+
+      'graficoDistribuicao',
+
+      {
+
+        type:'doughnut',
+
+        data:{
+
+          labels:
+
+          this.grafico.map(
+
+            (g:any)=>
+
+            g.grupo
+
+          ),
+
+          datasets:[{
+
+            data:
+
+            this.grafico.map(
+
+              (g:any)=>
+
+              g.quantidade
+
+            )
+
+          }]
+
+        },
+
+        options:{
+
+          responsive:true,
+
+          maintainAspectRatio:false,
+
+          plugins:{
+
+            legend:{
+
+              position:'bottom'
+
+            }
+
+          }
+
+        }
+
+      }
+
+    );
+
+
+    // ==========================
+
+    // TEMAS PREDOMINANTES
+
+    // ==========================
+
+
+    const temas:any = {};
+
+
+    this.partidos.forEach(
+
+      (p:any)=>{
+
+
+        const tema =
+
+        p.tema_predominante;
+
+
+        if(
+
+          !tema
+
+        ){
+
+          return;
+
+        }
+
+
+        temas[tema] =
+
+        (
+
+          temas[tema]
+
+          || 0
+
+        )
+
+        +
+
+        p.total_deputados;
+
+      }
+
+    );
+
+
+    const top10 =
+
+      Object.entries(
+
+        temas
+
+      )
+
+      .sort(
+
+        (a:any,b:any)=>
+
+        b[1]-a[1]
+
+      )
+
+      .slice(0,10);
+
+
+    this.graficoTemas =
+
+    new Chart(
+
+      'graficoTemas',
+
+      {
+
+        type:'bar',
+
+        data:{
+
+          labels:
+
+          top10.map(
+
+            (t:any)=>
+
+            t[0]
+
+          ),
+
+          datasets:[{
+
+            data:
+
+            top10.map(
+
+              (t:any)=>
+
+              t[1]
+
+            )
+
+          }]
+
+        },
+
+        options:{
+
+          responsive:true,
+
+          maintainAspectRatio:false,
+
+          plugins:{
+
+            legend:{
+
+              display:false
+
+            }
+
+          }
+
+        }
+
+      }
+
+    );
 
   }
 

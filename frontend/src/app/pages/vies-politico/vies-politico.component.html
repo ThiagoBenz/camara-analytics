@@ -105,11 +105,15 @@
 
       </h3>
 
-      <canvas
+      <div class="canvas-container">
 
-        id="graficoDistribuicao">
+        <canvas
 
-      </canvas>
+          id="graficoDistribuicao">
+
+        </canvas>
+
+      </div>
 
     </div>
 
@@ -122,11 +126,15 @@
 
       </h3>
 
-      <canvas
+      <div class="canvas-container">
 
-        id="graficoTemas">
+        <canvas
 
-      </canvas>
+          id="graficoTemas">
+
+        </canvas>
+
+      </div>
 
     </div>
 
@@ -168,7 +176,9 @@
 
       type="text"
 
-      placeholder="🔍 Pesquisar Deputado"
+      [placeholder]="aba === 'partidos'
+      ? '🔍 Pesquisar Partido'
+      : '🔍 Pesquisar Deputado'"
 
       (input)="filtrar($event)">
 
