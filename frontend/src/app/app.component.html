@@ -1,19 +1,35 @@
 <button
     class="botao-global"
     (click)="toggleSidebar()">
+
     ☰
+
 </button>
 
 <div
     class="overlay"
     *ngIf="menuAberto"
     (click)="fecharSidebar()">
+
 </div>
 
 <app-sidebar
     [menuAberto]="menuAberto">
+
 </app-sidebar>
 
-<main class="conteudo">
-    <router-outlet></router-outlet>
-</main>
+<div class="layout">
+
+    <div class="main">
+
+        <app-header></app-header>
+
+        <main class="conteudo">
+
+            <router-outlet></router-outlet>
+
+        </main>
+
+    </div>
+
+</div>

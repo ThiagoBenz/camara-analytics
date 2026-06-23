@@ -1,5 +1,5 @@
 <div class="sidebar"
-	[class.fechada]="!menuAberto">
+     [class.fechada]="!menuAberto">
 
     <div class="logo">
 
@@ -19,6 +19,8 @@
 
         </a>
 
+
+
         <!-- DEPUTADOS FEDERAIS -->
 
         <div class="grupo-menu">
@@ -28,78 +30,126 @@
                 (click)="toggleDeputados()">
 
                 <span>
+
                     {{ deputadosAberto ? '▼' : '▶' }}
+
                 </span>
 
                 <span>
+
                     🏛️ Deputados Federais
+
                 </span>
 
             </div>
+
 
             <div
                 class="submenu"
                 *ngIf="deputadosAberto">
 
+
+                <!-- 1 -->
+
                 <a
                     routerLink="/ranking-gastos"
                     routerLinkActive="ativo">
 
-                    📈 Ranking de Gastos
+                    📈 Ranking de Gastos - 1º
 
                 </a>
 
-                <a
-                    routerLink="/categorias-gastos"
-                    routerLinkActive="ativo">
 
-                    📂 Categorias de Gastos
-
-                </a>
-
-                <a
-                    routerLink="/correlacao-fornecedor-deputado"
-                    routerLinkActive="ativo">
-
-                    🏢 Fornecedores (Por Deputado)
-
-                </a>
-
-                <a
-                    routerLink="/fornecedores"
-                    routerLinkActive="ativo">
-
-                    🏆 Ranking de Fornecedores
-
-                </a>
-
-                <a
-                    routerLink="/panorama-partidos"
-                    routerLinkActive="ativo">
-
-                    🎯 Partidos
-
-                </a>
+                <!-- 2 e 3 -->
 
                 <a
                     routerLink="/eixos"
                     routerLinkActive="ativo">
 
-                    ⚖️ Eixos Temáticos
+                    ⚖️ Eixos Temáticos - 2º e 3º
 
                 </a>
+
+
+                <!-- 4 -->
 
                 <a
                     routerLink="/escolaridade"
                     routerLinkActive="ativo">
 
-                    🎓 Escolaridade
+                    🎓 Escolaridade - 4º
+
+                </a>
+
+
+                <!-- 5 -->
+
+                <a
+                    routerLink="/fornecedores"
+                    routerLinkActive="ativo">
+
+                    🏆 Ranking de Fornecedores - 5º
+
+                </a>
+
+
+                <!-- 7 -->
+
+                <a
+                    routerLink="/produtividade-parlamentar"
+                    routerLinkActive="ativo">
+
+                    🏅 Custo x Benefício - 7º
+
+                </a>
+
+                <!-- 9 -->
+
+                <a
+                    routerLink="/vies-politico"
+                    routerLinkActive="ativo">
+
+                    ⚖️ Viés Político - 9º
+
+                </a>
+
+
+                <!-- 11 -->
+
+                <a
+                    routerLink="/panorama-partidos"
+                    routerLinkActive="ativo">
+
+                    🎯 Partidos - 11º
+
+                </a>
+
+
+                <!-- 12 -->
+
+                <a
+                    routerLink="/correlacao-fornecedor-deputado"
+                    routerLinkActive="ativo">
+
+                    🏢 Fornecedores por Deputado - 12º
+
+                </a>
+
+
+                <!-- 13 -->
+
+                <a
+                    routerLink="/categorias-gastos"
+                    routerLinkActive="ativo">
+
+                    📂 Categorias de Gastos - 13º
 
                 </a>
 
             </div>
 
         </div>
+
 
         <!-- SENADORES -->
 
@@ -113,6 +163,7 @@
 
         </div>
 
+
         <!-- PRESIDENTES -->
 
         <div class="grupo-menu">
@@ -125,6 +176,7 @@
 
         </div>
 
+
         <!-- DEPUTADOS ESTADUAIS -->
 
         <div class="grupo-menu">
@@ -136,6 +188,7 @@
             </div>
 
         </div>
+
 
         <!-- GOVERNADORES -->
 

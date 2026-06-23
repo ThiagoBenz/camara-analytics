@@ -8,6 +8,8 @@ import { CorrelacaoFornecedorDeputadoComponent } from './pages/correlacao-fornec
 import { EscolaridadeDashboardComponent } from './pages/escolaridade-dashboard/escolaridade-dashboard.component';
 import { FornecedoresRankingComponent } from './pages/fornecedores-ranking/fornecedores-ranking.component';
 import { PanoramaPartidosComponent } from './pages/panorama-partidos/panorama-partidos.component';
+import { ProdutividadeParlamentarComponent } from './pages/produtividade-parlamentar/produtividade-parlamentar.component';
+import { ViesPoliticoComponent} from './pages/vies-politico/vies-politico.component';
 
 export const routes: Routes = [
   {
@@ -45,5 +47,16 @@ export const routes: Routes = [
   {
     path: 'panorama-partidos',
     component: PanoramaPartidosComponent
+  },
+  {
+
+  path: 'produtividade-parlamentar',
+
+  component: ProdutividadeParlamentarComponent
+
+  },
+  {
+    path: 'vies-politico',
+    component: ViesPoliticoComponent
   }
 ];
