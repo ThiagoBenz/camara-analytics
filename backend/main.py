@@ -1121,3 +1121,765 @@ def custo_beneficio():
         })
 
     return resultado
+
+
+
+
+
+    ###################################################################
+@app.get("/vies-politico")
+def vies_politico():
+
+    conn = get_connection()
+
+    # ==========================================
+    # CONSTANTES
+    # ==========================================
+
+    PARTIDOS = {
+
+        "PT": -1,
+        "PSOL": -1,
+        "PCdoB": -1,
+        "REDE": -1,
+
+        "PDT": -0.5,
+        "PSB": -0.5,
+
+        "MDB": 0,
+        "PSD": 0,
+        "UNIÃO": 0,
+        "CIDADANIA": 0,
+        "AVANTE": 0,
+        "SOLIDARIEDADE": 0,
+
+        "PODE": 0.5,
+        "REPUBLICANOS": 0.5,
+
+        "PP": 1,
+        "PL": 1,
+        "NOVO": 1
+
+    }
+
+    TEMAS_DIREITA = [
+
+        "Defesa e Segurança",
+
+        "Economia",
+
+        "Finanças Públicas e Orçamento",
+
+        "Agricultura, Pecuária, Pesca e Extrativismo",
+
+        "Indústria, Comércio e Serviços",
+
+        "Estrutura Fundiária"
+
+    ]
+
+    TEMAS_ESQUERDA = [
+
+        "Direitos Humanos e Minorias",
+
+        "Educação",
+
+        "Saúde",
+
+        "Previdência e Assistência Social",
+
+        "Trabalho e Emprego",
+
+        "Meio Ambiente e Desenvolvimento Sustentável"
+
+    ]
+
+    def nota_tema(tema):
+
+        if not tema:
+
+            return 0
+
+        if tema in TEMAS_DIREITA:
+
+            return 1
+
+        if tema in TEMAS_ESQUERDA:
+
+            return -1
+
+        return 0
+
+    # ==========================================
+    # DEPUTADOS EM EXERCÍCIO
+    # ==========================================
+
+    sql_dep = """
+
+    SELECT
+
+        id_dep,
+
+        nome_eleitoral_dep,
+
+        ultimoStatus_siglaPartido,
+
+        ultimoStatus_siglaUf
+
+    FROM Deputados
+
+    WHERE
+
+        ultimoStatus_situacao='Exercício'
+
+    """
+
+    deputados = {}
+
+    for row in conn.execute(
+
+        sql_dep
+
+    ).fetchall():
+
+        deputados[
+
+            row["id_dep"]
+
+        ] = {
+
+            "id_dep":
+
+            row["id_dep"],
+
+            "nome":
+
+            row["nome_eleitoral_dep"],
+
+            "partido":
+
+            (
+
+                row["ultimoStatus_siglaPartido"]
+
+                or ""
+
+            ).upper(),
+
+            "uf":
+
+            row["ultimoStatus_siglaUf"],
+
+            "temas": [],
+
+            "votos_validos": 0,
+
+            "votos_alinhados": 0
+
+        }
+
+    # ==========================================
+    # PROPOSIÇÕES
+    # ==========================================
+
+    sql_prop = """
+
+    SELECT
+
+        pa.id_deputado,
+
+        pt.tema
+
+    FROM PropAutores pa
+
+    INNER JOIN Proposicoes p
+
+        ON pa.id_proposicao = p.id_proposicao
+
+    INNER JOIN PropTemas pt
+
+        ON p.sigla_tipo_proposicao = pt.sigla_tipo_proposicao
+
+        AND
+
+        p.numero_proposicao = pt.numero_proposicao
+
+        AND
+
+        p.ano_proposicao = pt.ano_proposicao
+
+    """
+
+    for row in conn.execute(
+
+        sql_prop
+
+    ).fetchall():
+
+        id_dep = row["id_deputado"]
+
+        if id_dep in deputados:
+
+            if row["tema"]:
+
+                deputados[id_dep]["temas"].append(
+
+                    row["tema"]
+
+                )
+
+    # ==========================================
+    # ORIENTAÇÕES
+    # ==========================================
+
+    sql_orientacoes = """
+
+    SELECT
+
+        id_votacao,
+
+        siglaBancada,
+
+        orientacao
+
+    FROM VotOrientacoes
+
+    WHERE
+
+        orientacao IN (
+
+            'Sim',
+
+            'Não'
+
+        )
+
+    """
+
+    orientacoes = {}
+
+    for row in conn.execute(
+
+        sql_orientacoes
+
+    ).fetchall():
+
+        chave = (
+
+            row["id_votacao"],
+
+            row["siglaBancada"].upper()
+
+        )
+
+        orientacoes[
+
+            chave
+
+        ] = row["orientacao"]
+
+    # ==========================================
+    # VOTOS
+    # ==========================================
+
+    sql_votos = """
+
+    SELECT
+
+        id_votacao,
+
+        id_deputado,
+
+        voto
+
+    FROM VotVotos
+
+    WHERE
+
+        voto IN (
+
+            'Sim',
+
+            'Não'
+
+        )
+
+    """
+
+    for row in conn.execute(
+
+        sql_votos
+
+    ).fetchall():
+
+        id_dep = row["id_deputado"]
+
+        if id_dep not in deputados:
+
+            continue
+
+        partido = deputados[
+
+            id_dep
+
+        ]["partido"]
+
+        chave = (
+
+            row["id_votacao"],
+
+            partido
+
+        )
+
+        if chave not in orientacoes:
+
+            continue
+
+        deputados[id_dep][
+
+            "votos_validos"
+
+        ] += 1
+
+        if row["voto"] == orientacoes[chave]:
+
+            deputados[id_dep][
+
+                "votos_alinhados"
+
+            ] += 1
+
+    conn.close()
+
+    # ==========================================
+    # CONSOLIDAÇÃO
+    # ==========================================
+
+    esquerda = 0
+
+    centro = 0
+
+    direita = 0
+
+    resultado_deputados = []
+
+    partidos = {}
+
+    for dep in deputados.values():
+
+        # ====================
+        # PARTIDO
+        # ====================
+
+        nota_partido = PARTIDOS.get(
+
+            dep["partido"],
+
+            0
+
+        )
+
+        # ====================
+        # TEMAS
+        # ====================
+
+        temas_direita = 0
+
+        temas_esquerda = 0
+
+        for tema in dep["temas"]:
+
+            nota = nota_tema(
+
+                tema
+
+            )
+
+            if nota == 1:
+
+                temas_direita += 1
+
+            elif nota == -1:
+
+                temas_esquerda += 1
+
+        total_ideologico = (
+
+            temas_direita
+
+            +
+
+            temas_esquerda
+
+        )
+
+        if total_ideologico:
+
+            nota_temas = (
+
+                temas_direita
+
+                -
+
+                temas_esquerda
+
+            ) / total_ideologico
+
+        else:
+
+            nota_temas = 0
+
+        # ====================
+        # VOTAÇÕES
+        # ====================
+
+        if dep["votos_validos"]:
+
+            perc = (
+
+                dep["votos_alinhados"]
+
+                /
+
+                dep["votos_validos"]
+
+            )
+
+            nota_votos = (
+
+                perc * 2
+
+            ) - 1
+
+        else:
+
+            nota_votos = 0
+
+        # ====================
+        # ÍNDICE
+        # ====================
+
+        indice = (
+
+            0.10
+
+            * nota_partido
+
+        ) + (
+
+            0.80
+
+            * nota_temas
+
+        ) + (
+
+            0.10
+
+            * nota_votos
+
+        )
+
+        # ====================
+        # CLASSIFICAÇÃO
+        # ====================
+
+        if indice <= -0.20:
+
+            tendencia = "Esquerda"
+
+            esquerda += 1
+
+        elif indice >= 0.20:
+
+            tendencia = "Direita"
+
+            direita += 1
+
+        else:
+
+            tendencia = "Centro"
+
+            centro += 1
+
+        # ====================
+        # TEMA PREDOMINANTE
+        # ====================
+
+        tema_predominante = "-"
+
+        if dep["temas"]:
+
+            tema_predominante = max(
+
+                set(
+
+                    dep["temas"]
+
+                ),
+
+                key=dep["temas"].count
+
+            )
+
+        # ====================
+        # AGRUPAMENTO PARTIDOS
+        # ====================
+
+        partido = dep["partido"]
+
+        if partido not in partidos:
+
+            partidos[partido] = {
+
+                "partido":
+
+                partido,
+
+                "total_deputados": 0,
+
+                "indices": [],
+
+                "temas": []
+
+            }
+
+        partidos[partido][
+
+            "total_deputados"
+
+        ] += 1
+
+        partidos[partido][
+
+            "indices"
+
+        ].append(
+
+            indice
+
+        )
+
+        if tema_predominante != "-":
+
+            partidos[partido][
+
+                "temas"
+
+            ].append(
+
+                tema_predominante
+
+            )
+
+        resultado_deputados.append({
+
+            "id_dep":
+
+            dep["id_dep"],
+
+            "nome":
+
+            dep["nome"],
+
+            "partido":
+
+            partido,
+
+            "uf":
+
+            dep["uf"],
+
+            "tema_predominante":
+
+            tema_predominante,
+
+            "alinhamento_votos":
+
+            round(
+
+                (
+
+                    dep["votos_alinhados"]
+
+                    /
+
+                    dep["votos_validos"]
+
+                    * 100
+
+                )
+
+                if dep["votos_validos"]
+
+                else 0,
+
+                1
+
+            ),
+
+            "indice":
+
+            round(
+
+                indice,
+
+                2
+
+            ),
+
+            "tendencia":
+
+            tendencia
+
+        })
+
+    # ==========================================
+    # PARTIDOS
+    # ==========================================
+
+    resultado_partidos = []
+
+    for p in partidos.values():
+
+        media = (
+
+            sum(
+
+                p["indices"]
+
+            )
+
+            /
+
+            len(
+
+                p["indices"]
+
+            )
+
+        )
+
+        classificacao = "Centro"
+
+        if media <= -0.20:
+
+            classificacao = "Esquerda"
+
+        elif media >= 0.20:
+
+            classificacao = "Direita"
+
+        tema = "-"
+
+        if p["temas"]:
+
+            tema = max(
+
+                set(
+
+                    p["temas"]
+
+                ),
+
+                key=p["temas"].count
+
+            )
+
+        resultado_partidos.append({
+
+            "partido":
+
+            p["partido"],
+
+            "classificacao":
+
+            classificacao,
+
+            "total_deputados":
+
+            p["total_deputados"],
+
+            "tema_predominante":
+
+            tema
+
+        })
+
+    resultado_deputados.sort(
+
+        key=lambda x:
+
+        x["indice"],
+
+        reverse=True
+
+    )
+
+    return {
+
+        "cards": {
+
+            "esquerda":
+
+            esquerda,
+
+            "centro":
+
+            centro,
+
+            "direita":
+
+            direita
+
+        },
+
+        "grafico": [
+
+            {
+
+                "grupo":
+
+                "Esquerda",
+
+                "quantidade":
+
+                esquerda
+
+            },
+
+            {
+
+                "grupo":
+
+                "Centro",
+
+                "quantidade":
+
+                centro
+
+            },
+
+            {
+
+                "grupo":
+
+                "Direita",
+
+                "quantidade":
+
+                direita
+
+            }
+
+        ],
+
+        "partidos":
+
+        resultado_partidos,
+
+        "deputados":
+
+        resultado_deputados
+
+    }
