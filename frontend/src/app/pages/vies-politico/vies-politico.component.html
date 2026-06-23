@@ -1,0 +1,295 @@
+<div class="container">
+
+  <div class="titulo">
+
+    <h1>
+
+      🧭 Tendência Ideológica Parlamentar
+
+    </h1>
+
+    <p>
+
+      Análise do alinhamento político dos parlamentares a partir dos
+      partidos, temas das proposições e padrões de votação.
+
+    </p>
+
+  </div>
+
+
+  <!-- CARDS -->
+
+  <div class="cards">
+
+    <div class="card esquerda">
+
+      <h3>
+
+        ⬅️ Esquerda
+
+      </h3>
+
+      <h2>
+
+        {{ cards.esquerda || 0 }}
+
+      </h2>
+
+      <span>
+
+        Deputados
+
+      </span>
+
+    </div>
+
+
+    <div class="card centro">
+
+      <h3>
+
+        ⚖️ Centro
+
+      </h3>
+
+      <h2>
+
+        {{ cards.centro || 0 }}
+
+      </h2>
+
+      <span>
+
+        Deputados
+
+      </span>
+
+    </div>
+
+
+    <div class="card direita">
+
+      <h3>
+
+        ➡️ Direita
+
+      </h3>
+
+      <h2>
+
+        {{ cards.direita || 0 }}
+
+      </h2>
+
+      <span>
+
+        Deputados
+
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- GRÁFICOS -->
+
+  <div class="graficos">
+
+    <div class="grafico-card">
+
+      <h3>
+
+        Distribuição Ideológica
+
+      </h3>
+
+      <canvas
+
+        id="graficoDistribuicao">
+
+      </canvas>
+
+    </div>
+
+
+    <div class="grafico-card">
+
+      <h3>
+
+        Temas Predominantes
+
+      </h3>
+
+      <canvas
+
+        id="graficoTemas">
+
+      </canvas>
+
+    </div>
+
+  </div>
+
+
+  <!-- BOTÕES -->
+
+  <div class="botoes">
+
+    <button
+
+      [class.ativo]="aba === 'partidos'"
+
+      (click)="trocarAba('partidos')">
+
+      Partidos
+
+    </button>
+
+    <button
+
+      [class.ativo]="aba === 'deputados'"
+
+      (click)="trocarAba('deputados')">
+
+      Deputados
+
+    </button>
+
+  </div>
+
+
+  <!-- PESQUISA -->
+
+  <div class="barra-pesquisa">
+
+    <input
+
+      type="text"
+
+      placeholder="🔍 Pesquisar Deputado"
+
+      (input)="filtrar($event)">
+
+  </div>
+
+
+  <!-- TABELA PARTIDOS -->
+
+  <div
+
+    *ngIf="aba === 'partidos'"
+
+    class="tabela-container">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>#</th>
+
+          <th>Partido</th>
+
+          <th>Classificação</th>
+
+          <th>Total Deputados</th>
+
+          <th>Tema Predominante</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr
+
+          *ngFor="let partido of partidos; let i=index">
+
+          <td>{{ i + 1 }}</td>
+
+          <td>{{ partido.partido }}</td>
+
+          <td>{{ partido.classificacao }}</td>
+
+          <td>{{ partido.total_deputados }}</td>
+
+          <td>{{ partido.tema_predominante }}</td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <!-- TABELA DEPUTADOS -->
+
+  <div
+
+    *ngIf="aba === 'deputados'"
+
+    class="tabela-container">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>#</th>
+
+          <th>Deputado</th>
+
+          <th>Partido</th>
+
+          <th>UF</th>
+
+          <th>Tendência</th>
+
+          <th>Índice</th>
+
+          <th>Alinhamento dos Votos</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr
+
+          *ngFor="let dep of deputados; let i=index">
+
+          <td>{{ i + 1 }}</td>
+
+          <td>{{ dep.nome }}</td>
+
+          <td>{{ dep.partido }}</td>
+
+          <td>{{ dep.uf }}</td>
+
+          <td>{{ dep.tendencia }}</td>
+
+          <td>{{ dep.indice }}</td>
+
+          <td>
+
+            {{ dep.alinhamento_votos }}%
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

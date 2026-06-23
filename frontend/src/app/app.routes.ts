@@ -9,6 +9,7 @@ import { EscolaridadeDashboardComponent } from './pages/escolaridade-dashboard/e
 import { FornecedoresRankingComponent } from './pages/fornecedores-ranking/fornecedores-ranking.component';
 import { PanoramaPartidosComponent } from './pages/panorama-partidos/panorama-partidos.component';
 import { ProdutividadeParlamentarComponent } from './pages/produtividade-parlamentar/produtividade-parlamentar.component';
+import { ViesPoliticoComponent} from './pages/vies-politico/vies-politico.component';
 
 export const routes: Routes = [
   {
@@ -53,5 +54,9 @@ export const routes: Routes = [
 
   component: ProdutividadeParlamentarComponent
 
+  },
+  {
+    path: 'vies-politico',
+    component: ViesPoliticoComponent
   }
 ];

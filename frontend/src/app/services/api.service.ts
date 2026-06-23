@@ -111,4 +111,11 @@ export class ApiService {
     );
   }
 
+  getViesPolitico() {
+    return this.http.get(
+      `${this.apiUrl}/vies-politico`
+  );
+
+}
+
 }
